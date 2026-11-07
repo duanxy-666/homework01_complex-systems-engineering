@@ -21,7 +21,7 @@ GitHub：duanxy-666
 
 ## 网站文件
 
-- `index.html`：完整、响应式、可离线打开的课程作业网站。
+- `index.html`：完整设计。
 - `README.md`：项目说明。
 
 ## 使用方式
