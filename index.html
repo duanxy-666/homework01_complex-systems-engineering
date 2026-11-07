@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="复杂系统工程小组作业：具身智能组《哨界 Q-01 武装四足无人作战机器人概念设计》，六级架构、8系统、24子系统、96模块、需求验证与人工控制。">
+<meta name="theme-color" content="#07131d">
+<title>具身智能组 | 哨界 Q-01 武装四足无人作战机器人 — 复杂系统工程</title>
+<style>
+:root{
+ --bg:#07131d;--bg-2:#0b1c29;--panel:#102533;--panel-2:#142e3f;
+ --line:#2c4654;--ink:#ebf7f4;--muted:#a9c0c7;--soft:#728e9b;
+ --mint:#90f1c7;--mint-2:#43b99a;--amber:#f5bd70;--blue:#88c9df;
+ --danger:#e69d9c;--radius:22px;--max:1220px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased}
+body::before{content:"";pointer-events:none;position:fixed;inset:0;opacity:.13;z-index:0;background-image:linear-gradient(#638da511 1px,transparent 1px),linear-gradient(90deg,#638da511 1px,transparent 1px);background-size:35px 35px}
+::selection{background:#7fdbb7;color:#07131d}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+p{margin:0 0 1em}
+h1,h2,h3,h4{line-height:1.28;letter-spacing:-.025em}
+h1,h2,h3{margin:0}
+.mono,.eyebrow,.sys-en,.figure-note,.sub-id{font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;letter-spacing:.07em}
+.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.22em;color:var(--mint);font-weight:700}
+.container{max-width:var(--max);padding:0 26px;margin:0 auto;position:relative}
+.site-header{position:sticky;top:0;z-index:100;background:#07131df0;border-bottom:1px solid #2c465488;backdrop-filter:blur(18px)}
+.site-nav{min-height:78px;display:flex;align-items:center;gap:26px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.13em;white-space:nowrap}
+.brand-emblem{width:34px;height:34px;display:grid;place-items:center;color:#062321;background:var(--mint);clip-path:polygon(50% 0,100% 26%,100% 75%,50% 100%,0 75%,0 26%);font-size:18px}
+.brand small{display:block;font-weight:400;font-size:.63rem;letter-spacing:.11em;color:var(--soft)}
+.nav-links{display:flex;gap:20px;align-items:center;overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--muted);font-size:.83rem;transition:color .2s}
+.nav-links a:hover{color:var(--mint)}
+.nav-deadline{white-space:nowrap;padding:7px 12px;border:1px solid #426072;border-radius:40px;color:var(--amber);font-size:.75rem}
+.hero{position:relative;padding:78px 0 54px;overflow:hidden}
+.hero::after{content:"";position:absolute;z-index:-1;right:-16%;top:-100px;width:900px;height:700px;background:radial-gradient(circle,#20596230,transparent 66%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1.04fr;min-height:475px;align-items:center;gap:18px}
+.hero-badge{display:inline-flex;gap:9px;align-items:center;padding:7px 14px;background:#153b37;border:1px solid #367a6a;color:var(--mint);border-radius:99px;font-weight:650;font-size:.77rem}
+.hero h1{font-size:clamp(2.9rem,5.2vw,5.5rem);font-weight:900;line-height:1.13;margin:25px 0 23px;letter-spacing:-.065em}
+.hero h1 em{color:var(--mint);font-style:normal}
+.hero-lead{font-size:1.09rem;color:#c2d5d9;max-width:590px;line-height:2}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0 19px}
+.btn{border:1px solid var(--line);border-radius:12px;padding:12px 20px;color:var(--ink);background:#183241;font-weight:750;transition:transform .2s,border-color .2s,background .2s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{transform:translateY(-2px);border-color:var(--mint)}
+.btn-primary{background:var(--mint);border-color:var(--mint);color:#08211c}
+.btn-quiet{background:transparent}
+.hero-footnote{font-size:.75rem;color:var(--soft);margin-top:6px}
+.hero-visual{width:100%;position:relative}
+.hero-visual .figure-panel{padding:10px;background:linear-gradient(145deg,#112b3a77,#0b182277);border:1px solid #31516380;border-radius:28px;box-shadow:0 35px 110px #0004}
+.hero-visual svg{display:block;width:100%;height:auto}
+.figure-bottom{display:flex;justify-content:space-between;color:var(--soft);font-size:.66rem;letter-spacing:.09em;margin:12px 10px 1px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:36px}
+.stat{padding:24px 24px 22px;border-right:1px solid var(--line)}
+.stat:last-child{border:0}
+.stat b{font-size:2.6rem;line-height:1.1;display:block;color:var(--ink);font-weight:830}
+.stat b small{font-size:.95rem;color:var(--mint);vertical-align:top}
+.stat span{color:var(--muted);font-size:.83rem}
+.section{padding:88px 0 10px;position:relative}
+.section-kicker{display:flex;align-items:center;gap:13px;color:var(--mint);font-size:.76rem;font-weight:780;letter-spacing:.17em;margin-bottom:15px}
+.section-kicker::after{content:"";height:1px;width:90px;background:var(--mint-2);opacity:.55}
+.section-heading{max-width:780px;margin-bottom:35px}
+.section-heading h2{font-weight:860;font-size:clamp(2rem,3.6vw,3.25rem);margin:0 0 15px;letter-spacing:-.055em}
+.section-heading p{color:var(--muted);font-size:1.02rem;max-width:800px}
+.section-heading strong{color:var(--ink)}
+.card{border:1px solid var(--line);border-radius:var(--radius);padding:27px;background:linear-gradient(150deg,#132b3a,#0d202d);position:relative;overflow:hidden}
+.card p{color:var(--muted)}
+.tag{padding:4px 9px;border:1px solid #426072;border-radius:99px;color:var(--muted);font-size:.75rem}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.tier-strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:28px 0 14px}
+.tier-btn{border:1px solid #284a58;background:#112b39;color:var(--muted);border-radius:13px;padding:18px 8px;min-height:105px;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;transition:background .2s,transform .2s,border .2s}
+.tier-btn:not(:last-child):after{content:"→";position:absolute;right:-13px;top:37px;color:var(--mint);font-size:15px;z-index:2}
+.tier-btn span{font-size:.74rem;opacity:.74;letter-spacing:.14em}
+.tier-btn strong{color:var(--ink);font-size:1.06rem;margin-top:5px}
+.tier-btn.active{border-color:var(--mint);background:#193e3a;box-shadow:inset 0 0 0 1px #376f61;transform:translateY(-2px)}
+.tier-btn.active strong{color:var(--mint)}
+.tier-detail{margin-top:16px;border:1px solid #3c6f66;background:#0e282c;border-radius:17px;min-height:130px;padding:23px 25px;display:flex;align-items:center;justify-content:space-between;gap:26px}
+.tier-detail .pill-id{font-size:.69rem;letter-spacing:.16em;color:var(--mint)}
+.tier-detail h3{font-size:1.27rem;margin:5px 0}
+.tier-detail p{color:#c0d2d2;margin:0}
+.tier-detail small{color:#8db5ae;white-space:nowrap}
+.note{border-left:3px solid var(--amber);padding:14px 18px;background:#f5bd7010;border-radius:0 12px 12px 0;color:#e9d4b5;font-size:.9rem;margin-top:25px}
+.mission-head{padding:28px;border:1px solid #45636b;border-radius:20px;background:linear-gradient(130deg,#163441,#10252b)}
+.mission-head h3{font-size:1.45rem;margin-bottom:8px}
+.mission-head p{color:var(--muted);max-width:900px}
+.mission-grid{margin-top:15px}
+.mission-card{min-height:190px}
+.num-circle{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;background:#1b4546;color:var(--mint);font-size:.81rem;font-family:monospace}
+.mission-card h3{font-size:1.05rem;margin:16px 0 10px}
+.mission-card p{font-size:.9rem}
+.ecosystem{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.eco-card{border:1px solid #375469;background:#112b3a;border-radius:16px;padding:21px;min-height:164px}
+.eco-card .id{color:var(--mint);font-size:.7rem;letter-spacing:.12em}
+.eco-card h3{font-size:1rem;margin:10px 0 9px}
+.eco-card p{font-size:.87rem;color:var(--muted);line-height:1.65}
+.eco-card.featured{border-color:var(--mint-2);background:linear-gradient(120deg,#174540,#123135)}
+.eco-summary{margin:18px 0 0;padding:17px 22px;border:1px dashed #587885;border-radius:14px;color:var(--muted);font-size:.88rem}
+.vehicle-main{display:grid;grid-template-columns:1.15fr 1fr;gap:22px;align-items:stretch}
+.vehicle-main .card h3{font-size:1.5rem}
+.vehicle-targets{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:24px}
+.vehicle-targets div{padding:17px;background:#0a1a24;border:1px solid #274553;border-radius:14px}
+.vehicle-targets strong{font-size:1.48rem;color:var(--mint);display:block;line-height:1.25}
+.vehicle-targets span{display:block;color:var(--muted);font-size:.78rem;margin-top:5px}
+.vehicle-family{display:grid;gap:12px}
+.vehicle-unit{border:1px solid var(--line);background:#0d2330;border-radius:15px;padding:19px 22px;display:flex;gap:15px;align-items:center}
+.vehicle-unit b{font-size:.84rem;border:1px solid #486273;padding:9px;border-radius:10px;color:var(--mint)}
+.vehicle-unit strong{font-size:.98rem;display:block}
+.vehicle-unit span{font-size:.82rem;color:var(--muted)}
+.vehicle-unit.selected{border-color:var(--mint-2);background:#163a38}
+.dashed-divider{height:1px;background:repeating-linear-gradient(90deg,#698b9277 0 5px,transparent 5px 12px);margin:25px 0}
+.system-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.search-wrap{max-width:520px;min-width:240px;flex:1;display:flex;align-items:center;gap:12px;background:#0c202c;border:1px solid #3b5a69;border-radius:12px;padding:0 16px}
+.search-wrap span{color:var(--mint)}
+.search-wrap input{width:100%;background:transparent;border:0;color:var(--ink);padding:13px 0;outline:none;font-size:.92rem}
+.search-wrap input::placeholder{color:#819eaa}
+.system-count{color:var(--muted);font-size:.84rem}
+.systems-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;align-items:start}
+.sys-card{border:1px solid #335263;border-radius:21px;background:linear-gradient(160deg,#142e3d,#0e212e);padding:25px;overflow:hidden}
+.sys-card[hidden]{display:none}
+.sys-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sys-icon{width:47px;height:47px;border-radius:13px;border:1px solid #4f877c;background:#1c4545;display:grid;place-items:center;font-size:1.6rem;color:var(--mint)}
+.sys-number{color:var(--mint);font-size:.84rem}
+.sys-card h3{font-size:1.23rem;margin-bottom:3px}
+.sys-en{font-size:.64rem;color:var(--soft);margin-bottom:15px}
+.sys-role{font-size:.89rem;min-height:77px;color:#b4cbd0}
+.io-line{display:flex;align-items:baseline;gap:13px;border-top:1px solid #2f4957;padding:9px 0}
+.io-line span{font-family:monospace;color:var(--amber);font-size:.75rem;width:36px;flex-shrink:0}
+.io-line p{margin:0;color:#bdd0d2;font-size:.81rem}
+.sys-details{border-top:1px solid #496c75;margin-top:9px}
+.sys-details summary{padding:17px 1px 2px;display:flex;justify-content:space-between;align-items:center;list-style:none;font-size:.88rem;font-weight:750;color:var(--mint)}
+.sys-details summary::-webkit-details-marker{display:none}
+.summary-chevron{display:inline-block;font-size:1.4rem;font-weight:400;transition:transform .2s}
+details[open] .summary-chevron{transform:rotate(45deg)}
+.sub-list{display:grid;gap:10px;padding-top:17px}
+.sub-item{border-radius:13px;border:1px solid #34535e;background:#071c28;padding:15px 16px}
+.sub-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.sub-top strong{font-size:.9rem}
+.sub-id{color:var(--amber);font-size:.73rem}
+.sub-item p{font-size:.79rem;color:var(--muted);margin:7px 0 12px}
+.module-row{display:flex;gap:6px;flex-wrap:wrap}
+.module-pill{display:inline-block;border:1px solid #335c63;color:#c9dedc;background:#14343c;padding:4px 8px;border-radius:7px;font-size:.72rem;line-height:1.5}
+.interface-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+.flow-diagram{border:1px solid var(--line);border-radius:19px;padding:26px;background:#0d2330}
+.flow-node{border:1px solid #43716f;border-radius:12px;background:#1a3c3b;padding:15px;text-align:center;font-weight:800;font-size:.91rem}
+.flow-node small{display:block;color:var(--muted);font-size:.72rem;font-weight:500;margin-top:4px}
+.flow-arrow{text-align:center;color:var(--mint);font-size:1.3rem;height:30px}
+.flow-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.flow-bottom .flow-node{background:#14313d;border-color:#315769;font-size:.77rem;padding:13px 6px}
+.flow-feedback{margin-top:15px;color:#acc5c9;font-size:.81rem;border-top:1px dashed #47717b;padding-top:14px;text-align:center}
+.interface-list{margin:0;padding:0;list-style:none}
+.interface-list li{padding:14px 0;border-bottom:1px solid var(--line);font-size:.89rem;color:#bdcfd4}
+.interface-list li:last-child{border:0}
+.interface-list b{color:var(--mint);margin-right:12px;font-family:monospace}
+.phases{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}
+.phase{border:1px solid #3a5665;background:#102a39;padding:20px 17px;border-radius:16px;position:relative}
+.phase:not(:last-child):after{content:"›";position:absolute;right:-12px;top:32px;color:var(--mint);font-size:1.7rem;z-index:2}
+.phase .phase-count{color:var(--mint);font-size:.73rem;font-family:monospace}
+.phase h3{font-size:.97rem;margin:9px 0}
+.phase p{font-size:.79rem;color:var(--muted);margin:0}
+.trace-grid{display:grid;gap:13px}
+.trace-card{border:1px solid #355b60;background:#102730;border-radius:17px;padding:22px}
+.trace-card h3{margin:9px 0 18px;font-size:1.16rem}
+.trace-top{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.trace-top .mono{color:var(--amber);font-size:.7rem}
+.trace-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.trace-steps>div{background:#091b27;border:1px solid #2d4c55;border-radius:9px;padding:10px;min-width:0;position:relative}
+.trace-steps>div:not(:last-child):after{content:"→";position:absolute;right:-12px;top:18px;color:var(--mint);z-index:3}
+.trace-steps span{display:block;color:var(--mint);font-size:.65rem;font-family:monospace;letter-spacing:.1em}
+.trace-steps b{display:block;font-size:.78rem;margin:5px 0;line-height:1.4;overflow-wrap:anywhere}
+.trace-steps small{display:block;color:var(--soft);font-size:.67rem}
+.table-shell{border:1px solid #355566;background:#0e2532;border-radius:17px;overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:960px}
+th,td{text-align:left;border-bottom:1px solid #294956;padding:14px 15px;font-size:.84rem;vertical-align:top}
+th{background:#183544;color:var(--mint);font-size:.75rem;letter-spacing:.03em;white-space:nowrap}
+td{color:#b7ccd0}
+td strong{color:var(--ink)}
+td.mono{font-size:.72rem;color:var(--amber)}
+td.small{font-size:.7rem;color:#b9d5d2}
+tbody tr:hover{background:#183b4255}
+tr:last-child td{border:0}
+.risk{border-radius:7px;padding:3px 8px;font-size:.7rem;font-weight:800}
+.risk.high{background:#623c47;color:#ffcecc}
+.risk.mid{background:#5c4b36;color:#fbe0a9}
+.verify-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.verify-step{padding:22px;background:#122f3a;border:1px solid #365c67;border-radius:15px}
+.verify-step span{color:var(--amber);font-family:monospace;font-size:.75rem}
+.verify-step h3{font-size:.96rem;margin:11px 0}
+.verify-step p{color:var(--muted);font-size:.82rem}
+.guardrails{display:grid;grid-template-columns:1.25fr .75fr;gap:15px}
+.guardrail-primary{background:linear-gradient(140deg,#1d443e,#123135);border-color:#4a8a74}
+.guardrail-primary h3{font-size:1.5rem;margin:12px 0}
+.guardrail-primary p{color:#c7ddd7;font-size:.94rem}
+.guardrail-list{margin:10px 0 0;padding-left:18px;color:#c6d9d5}
+.guardrail-list li{padding:5px 0}
+.ref-list{margin:0;padding-left:20px;color:var(--muted);font-size:.87rem}
+.ref-list a{color:var(--mint);text-decoration:underline;text-underline-offset:4px}
+.ref-list li{margin-bottom:10px}
+.endcap{margin-top:75px;background:linear-gradient(180deg,#0b202c,#091720);border-top:1px solid #2c5160;padding:47px 0}
+.endcap h2{font-size:2rem}
+.endcap p{color:var(--muted);max-width:800px}
+.footer-minor{display:flex;justify-content:space-between;gap:16px;margin-top:28px;padding-top:22px;border-top:1px solid #284752;color:var(--soft);font-size:.78rem;flex-wrap:wrap}
+.no-results{border:1px dashed var(--line);border-radius:14px;padding:35px;color:var(--muted);text-align:center}
+footer a:hover{text-decoration:underline}
+@media(max-width:1080px){
+ .nav-links{gap:12px}.nav-links a{font-size:.78rem}.nav-deadline{display:none}
+ .hero-grid{grid-template-columns:1fr 1fr;gap:10px}
+ .hero h1{font-size:3.4rem}.ecosystem{grid-template-columns:repeat(2,1fr)}
+ .trace-steps{grid-template-columns:repeat(3,1fr)}
+ .trace-steps>div:after{display:none}
+}
+@media(max-width:760px){
+ html{scroll-padding-top:70px}
+ .container{padding:0 17px}
+ .site-nav{min-height:69px;flex-wrap:wrap;padding:11px 0 8px;gap:8px}
+ .brand{font-size:.84rem}.brand small{font-size:.58rem}
+ .nav-links{width:100%;justify-content:flex-start;gap:18px}
+ .hero{padding:52px 0 35px}
+ .hero-grid{grid-template-columns:1fr}
+ .hero h1{font-size:3.1rem}.hero-lead{font-size:.98rem}
+ .hero-visual{max-width:560px;margin:auto}
+ .hero-stats{grid-template-columns:repeat(2,1fr)}
+ .stat{padding:20px 16px}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+ .stat b{font-size:2.15rem}
+ .section{padding-top:68px}.section-heading h2{font-size:2rem}
+ .tier-strip{grid-template-columns:repeat(3,1fr)}
+ .tier-btn{min-height:94px}.tier-btn:nth-child(3):after{display:none}
+ .tier-detail{align-items:flex-start;flex-direction:column;gap:3px}
+ .tier-detail small{white-space:normal}
+ .grid-2,.grid-3,.grid-4,.systems-grid,.vehicle-main,.interface-layout,.guardrails{grid-template-columns:1fr}
+ .mission-card{min-height:auto}.mission-grid{gap:11px}
+ .phases{grid-template-columns:1fr}
+ .phase:not(:last-child):after{content:"↓";right:22px;top:auto;bottom:-19px}
+ .trace-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .verify-steps{grid-template-columns:repeat(2,1fr)}
+ .sys-role{min-height:auto}
+}
+@media(max-width:460px){
+ .hero h1{font-size:2.6rem}
+ .hero-actions .btn{width:100%;justify-content:center}
+ .tier-btn span{font-size:.65rem}
+ .tier-btn strong{font-size:.91rem}
+ .ecosystem{grid-template-columns:1fr}
+ .trace-steps{grid-template-columns:1fr}
+ .verify-steps{grid-template-columns:1fr}
+ .trace-top{flex-direction:column;align-items:flex-start}
+ .card,.sys-card{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::after,*::before{animation:none!important;transition:none!important}}
+@media print{
+ :root{--bg:#fff;--panel:#fff;--ink:#1b2b33;--muted:#465962;--mint:#0b8064;--amber:#845300;--line:#ccd7db}
+ body{background:white;color:#1c2b31;font-size:10pt}
+ body::before,.site-header,.hero-actions,.search-wrap,.system-toolbar .btn,.endcap .btn{display:none!important}
+ .hero{padding:20px 0}.hero-grid{grid-template-columns:1fr 1fr}
+ .hero h1{font-size:31pt}.hero-visual .figure-panel{background:#eef3f3;border-color:#c3d0d1;box-shadow:none}
+ .section{padding-top:27px}.section-heading h2{font-size:20pt}
+ .card,.sys-card,.eco-card,.mission-head,.trace-card,.phase,.verify-step,.tier-detail,.vehicle-unit{background:white;color:#19313a;border-color:#c4d1d5;break-inside:avoid}
+ .card p,.sys-role,.sub-item p,.phase p,.eco-card p,.mission-card p,.tier-detail p,.footer-minor,.section-heading p{color:#445861}
+ .sub-item,.trace-steps>div,.vehicle-targets div{background:#f4f7f7;color:#19313a}
+ .module-pill{background:#eaf3f1;color:#274d48;border-color:#c4dad5}
+ .sys-en{color:#62757a}.sys-card h3,.card h3,.trace-steps b{color:#162d33}
+ .systems-grid,.mission-grid,.ecosystem,.vehicle-main,.guardrails{grid-template-columns:repeat(2,1fr)}
+ .sys-details:not([open]) .sub-list{display:grid}
+ .sys-details .sub-list{display:grid!important}
+ details{display:block}summary{display:none!important}
+ .table-shell{overflow:visible}.table-shell table{min-width:0;table-layout:auto}th,td{font-size:7.2pt;padding:7px}
+ .trace-steps{grid-template-columns:repeat(3,1fr)}.trace-steps>div:after{display:none}
+ .endcap{margin-top:25px;padding:20px 0}
+ a{color:#0a6b56}
+}
+
+.mission-extra{margin-top:16px;border-top:1px solid #31505b;padding-top:13px}
+.mission-extra span{font-family:monospace;color:var(--mint);font-size:.69rem;letter-spacing:.12em}
+.mission-extra p{margin:6px 0;color:#c5d7d8;font-size:.79rem}
+.mission-extra small{color:var(--amber);font-size:.72rem}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+ <div class="container site-nav">
+  <a class="brand" href="#home" aria-label="返回页首"><span class="brand-emblem">Q</span><span>SENTINEL / Q-01<small>COMPLEX SYSTEMS ENGINEERING · 2026</small></span></a>
+  <nav class="nav-links" aria-label="页面导航">
+   <a href="#hierarchy">六级架构</a><a href="#mission">任务体系</a><a href="#vehicle">整机</a>
+   <a href="#systems">系统分解</a><a href="#trace">链路追溯</a><a href="#verification">需求验证</a><a href="#safety">安全边界</a>
+  </nav>
+  <span class="nav-deadline">交付 2026.11.11 · 12:00</span>
+ </div>
+</header>
+<main id="home">
+ <section class="hero">
+  <div class="container">
+   <div class="hero-grid">
+    <div class="hero-copy">
+     <span class="hero-badge"><span aria-hidden="true">●</span> 具身智能组 · COMPLEX SYSTEMS</span>
+     <h1>让机器<br>拥有<em>具身智能</em>。</h1>
+     <p class="hero-lead"><strong>哨界 Q-01</strong> · 武装四足无人作战机器人概念设计。围绕<strong>多模态感知、具身决策、四足行动与人工监督</strong>展开六级系统工程架构，武装属性在任务授权与安全治理层抽象表达。</p>
+     <div class="hero-actions">
+      <a class="btn btn-primary" href="#hierarchy">探索六级架构 <span aria-hidden="true">↗</span></a>
+      <button class="btn btn-quiet" id="copy-chain" type="button">复制典型任务链</button>
+     </div>
+     <p class="hero-footnote">具身智能组 · Duan xy 15241604 / 武装任务概念 / 人工监督与接管</p>
+    </div>
+    <div class="hero-visual">
+     <div class="figure-panel"><svg viewBox="0 0 690 565" role="img" aria-labelledby="robotTitle robotDesc">
+<title id="robotTitle">哨界 Q-01 具身智能武装四足机器人概念结构示意</title>
+<desc id="robotDesc">具身智能四足机器人基础底盘结构示意，包括观察传感器、机身计算和四足关节；武装系统为抽象授权状态，不展示武器部件。</desc>
+<defs>
+ <linearGradient id="torso" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2f6571"/><stop offset="1" stop-color="#173b4d"/></linearGradient>
+ <linearGradient id="body" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#a4f6d6"/><stop offset="1" stop-color="#2b897c"/></linearGradient>
+ <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1d4756"/><stop offset="1" stop-color="#0c2636"/></linearGradient>
+ <pattern id="dots" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".8" fill="#69969c" opacity=".42"/></pattern>
+</defs>
+<rect x="5" y="5" width="680" height="555" rx="24" fill="#0c202c"/>
+<rect x="6" y="6" width="678" height="553" rx="23" fill="url(#dots)"/>
+<circle cx="346" cy="270" r="215" fill="none" stroke="#28545c" stroke-width="1.5" stroke-dasharray="8 11"/>
+<circle cx="346" cy="270" r="169" fill="none" stroke="#28545c" stroke-width="1.2" stroke-dasharray="3 10"/>
+<path d="M29 492H662" stroke="#537d82" stroke-width="2"/>
+<path d="M54 512H645 M84 535H610" stroke="#1a414b" stroke-width="1.3"/>
+<path d="M97 475v17 M187 475v17 M277 475v17 M367 475v17 M457 475v17 M547 475v17" stroke="#2c5862"/>
+<g fill="none" stroke="#2e6770" stroke-width="1.4" opacity=".7">
+ <path d="M77 153v-22h54 M573 155h43v-33"/>
+ <path d="M88 341H48v-35 M558 328h53v29"/>
+</g>
+<!-- far legs: shown behind the robot body -->
+<g stroke="#274c5d" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M218 288L172 380L196 475" fill="none" stroke="#326575" stroke-width="31"/>
+ <path d="M218 288L172 380L196 475" fill="none" stroke="#759c9e" stroke-width="10"/>
+ <circle cx="172" cy="380" r="16" fill="#245366" stroke="#6ea7a0" stroke-width="5"/>
+ <path d="M180 462l46 0 9 21h-67z" fill="#1a4956" stroke="#89b6ab" stroke-width="3"/>
+ <path d="M460 287L524 380L505 475" fill="none" stroke="#326575" stroke-width="30"/>
+ <path d="M460 287L524 380L505 475" fill="none" stroke="#759c9e" stroke-width="9"/>
+ <circle cx="524" cy="380" r="16" fill="#245366" stroke="#6ea7a0" stroke-width="5"/>
+ <path d="M484 462h46l14 21h-67z" fill="#1a4956" stroke="#89b6ab" stroke-width="3"/>
+</g>
+<!-- chassis upper shell -->
+<path d="M190 174Q194 161 213 158L473 159Q492 160 497 177L516 262Q519 288 492 307H191Q173 299 170 283L171 192Q172 181 190 174Z" fill="url(#torso)" stroke="#98d0c2" stroke-width="3"/>
+<path d="M205 177h267q12 0 17 13l7 49H185l4-49q1-13 16-13Z" fill="url(#body)" stroke="#bbece0" stroke-width="2.5"/>
+<path d="M187 242H503l-10 41q-5 13-18 13H200q-14-1-17-13Z" fill="#102f3c" stroke="#659a99" stroke-width="2"/>
+<path d="M225 197h133" stroke="#d2ffec" stroke-width="4" stroke-linecap="round" opacity=".75"/>
+<path d="M420 204h43" stroke="#164f4b" stroke-width="6" stroke-linecap="round"/>
+<rect x="272" y="251" width="136" height="30" rx="8" fill="#163e4a" stroke="#4e938f" stroke-width="2"/>
+<path d="M289 266h42m10 0h16m10 0h23" stroke="#8fecc3" stroke-width="4" stroke-linecap="round"/>
+<rect x="300" y="245" width="78" height="5" rx="2" fill="#f0be7c"/>
+<!-- head sensor mast -->
+<path d="M407 169V118Q407 106 418 105H456Q468 107 468 120V168" fill="#214b5c" stroke="#7ea9a8" stroke-width="2"/>
+<rect x="398" y="97" width="83" height="50" rx="16" fill="url(#panel)" stroke="#95d1bf" stroke-width="3"/>
+<rect x="412" y="112" width="52" height="22" rx="7" fill="#1c5c62"/>
+<circle cx="430" cy="123" r="8" fill="#9ef3d2"/><circle cx="450" cy="123" r="5" fill="#f5c07f"/>
+<path d="M443 99V86" stroke="#a7dfce" stroke-width="3" stroke-linecap="round"/>
+<circle cx="443" cy="81" r="7" fill="#f6be70"/>
+<!-- rear sensor/light -->
+<rect x="188" y="215" width="18" height="34" rx="6" fill="#eab875"/>
+<path d="M514 206l19 10v33l-23 10" fill="#2b7881" stroke="#addfd5" stroke-width="2"/>
+<circle cx="525" cy="231" r="9" fill="#9fe8d3"/>
+<!-- near legs: large pistons and joints -->
+<g stroke-linecap="round" stroke-linejoin="round">
+ <path d="M231 299L259 383L222 475" stroke="#0b2b39" stroke-width="40" fill="none"/>
+ <path d="M231 299L259 383L222 475" stroke="#74cbb3" stroke-width="31" fill="none"/>
+ <path d="M231 300L258 381" stroke="#b3f0d5" stroke-width="7" opacity=".9"/>
+ <path d="M258 387L230 457" stroke="#3c998f" stroke-width="11"/>
+ <circle cx="230" cy="300" r="20" fill="#204e59" stroke="#a4efcf" stroke-width="6"/>
+ <circle cx="259" cy="383" r="21" fill="#153b4a" stroke="#9ee4c9" stroke-width="6"/>
+ <circle cx="259" cy="383" r="6" fill="#f4b96a"/>
+ <path d="M199 460h46l18 24h-77z" fill="#1b5058" stroke="#a6e7cb" stroke-width="3"/>
+ <path d="M457 298L422 383L465 475" stroke="#0c2f3d" stroke-width="40" fill="none"/>
+ <path d="M457 298L422 383L465 475" stroke="#70c6ad" stroke-width="31" fill="none"/>
+ <path d="M457 300L424 377" stroke="#b3efd8" stroke-width="8"/>
+ <path d="M425 387L457 460" stroke="#388e89" stroke-width="11"/>
+ <circle cx="457" cy="299" r="20" fill="#204e59" stroke="#a4efcf" stroke-width="6"/>
+ <circle cx="422" cy="383" r="21" fill="#153b4a" stroke="#9ee4c9" stroke-width="6"/>
+ <circle cx="422" cy="383" r="6" fill="#f4b96a"/>
+ <path d="M441 460h47l20 24h-77z" fill="#1b5058" stroke="#a6e7cb" stroke-width="3"/>
+</g>
+<!-- field labels -->
+<g font-family="ui-monospace,Consolas,monospace" fill="#9dccd1" font-size="13">
+ <text x="42" y="38" letter-spacing="2">Q-01 // EMBODIED AI PLATFORM</text>
+ <text x="474" y="38" font-size="11" fill="#78a19e">ARMED CONCEPT</text>
+ <text x="68" y="122">PERCEPTION</text><path d="M134 119L199 205" fill="none" stroke="#557e84" stroke-width="1.4"/>
+ <text x="503" y="91">VISION</text><path d="M504 97L476 117" fill="none" stroke="#557e84" stroke-width="1.4"/>
+ <text x="65" y="316">LOCOMOTION</text><path d="M164 318L230 339" fill="none" stroke="#557e84" stroke-width="1.4"/>
+ <text x="511" y="339">SAFETY</text><path d="M510 342L466 300" fill="none" stroke="#557e84" stroke-width="1.4"/>
+ <text x="36" y="551" font-size="11" letter-spacing="1.5">EMBODIED AI / HUMAN CONTROL</text>
+</g>
+<circle cx="539" cy="506" r="4" fill="#8ce9c4"/><text x="550" y="510" fill="#9dc9bb" font-size="11" font-family="monospace">SAFE MODE</text>
+</svg>
+       <div class="figure-bottom"><span>PLATFORM / STRUCTURAL OVERVIEW</span><span>ILLUSTRATIVE RENDER · NOT TO SCALE</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="hero-stats" aria-label="设计覆盖程度">
+    <div class="stat"><b>06<small> 层</small></b><span>层级贯通</span></div>
+    <div class="stat"><b>08<small> 个</small></b><span>整机系统</span></div>
+    <div class="stat"><b>24<small> 个</small></b><span>功能子系统</span></div>
+    <div class="stat"><b>96<small> 个</small></b><span>软硬件模块</span></div>
+   </div>
+  </div>
+ </section>
+
+ <section class="section" id="hierarchy">
+  <div class="container">
+   <div class="section-kicker">01 / SYSTEM DECOMPOSITION</div>
+   <div class="section-heading"><h2>先确定边界，<br>再自上而下逐层展开。</h2>
+    <p>六级架构不是六个同义词，而是从<strong>使命目标、协同关系、物理整机，到功能分工与具体实现</strong>的逐级分解。点击层级查看本项目的对应含义。</p></div>
+   <div class="tier-strip" role="group" aria-label="六级系统结构">
+    <button class="tier-btn" data-tier="mission" aria-pressed="false"><span>01 · MISSION</span><strong>任务</strong></button>
+    <button class="tier-btn" data-tier="sos" aria-pressed="false"><span>02 · SoS</span><strong>体系</strong></button>
+    <button class="tier-btn" data-tier="vehicle" aria-pressed="true"><span>03 · VEHICLE</span><strong>整机</strong></button>
+    <button class="tier-btn" data-tier="system" aria-pressed="false"><span>04 · SYSTEM</span><strong>系统</strong></button>
+    <button class="tier-btn" data-tier="subsystem" aria-pressed="false"><span>05 · SUBSYSTEM</span><strong>子系统</strong></button>
+    <button class="tier-btn" data-tier="module" aria-pressed="false"><span>06 · MODULE</span><strong>模块</strong></button>
+   </div>
+   <div class="tier-detail" id="tier-detail" aria-live="polite">
+    <div><span class="pill-id mono">V-01 / MAIN PLATFORM</span><h3>整机 Vehicles</h3><p>本组重点分析“哨界 Q-01”武装四足无人作战机器人概念整机。</p></div><small>回答：承担功能的物理平台是什么？</small>
+   </div>
+   <div class="note"><strong>层级界定：</strong>“武装四足机器人”在本项目中被视为核心<strong>整机 V-01</strong>；其内部的机动、感知等属于<strong>系统 S01–S08</strong>。上层纳入指挥、通信、保障与人机协同；下层继续展开至可落实的软硬件模块。跨层需求采用统一编号，避免混淆。</div>
+  </div>
+ </section>
+
+ <section class="section" id="mission">
+ <div class="container">
+  <div class="section-kicker">02 / MISSION &amp; SoS</div>
+  <div class="section-heading"><h2>以任务牵引能力，<br>以体系约束自主性。</h2>
+   <p>具身智能是这台四足机器狗的核心研究方向：机器人必须完成<strong>感知—理解—规划—行动—反馈</strong>闭环。武装属性属于任务级和授权级概念，<strong>人类始终保留关键决策与终止权</strong>。</p></div>
+  <div class="mission-head">
+   <span class="eyebrow">M-00 · OVERALL MISSION</span>
+   <h3>高风险区域的武装四足无人平台：具身感知、机动警戒与人机协同</h3>
+   <p>面向复杂地形与信息不充分的地面环境，利用四足平台减少人员直接暴露、提升场景观察和机动能力；在抽象的武装任务框架中，强调人工授权、可解释状态、安全监督与责任追溯，不设计攻击实施机制。</p>
+  </div>
+  <div class="grid-3 mission-grid">
+   <article class="card mission-card"><span class="num-circle">M01</span><h3>危险地形先行侦察</h3><p>目标：在给定区域获取地形、障碍、温度等环境信息；成功条件：回传可供操作员复核的现场报告。</p></article>
+   <article class="card mission-card"><span class="num-circle">M02</span><h3>具身自主机动巡查</h3><p>目标：在安全约束下自主调整步态并执行路线；成功条件：低置信度或异常状态时可安全停止。</p></article>
+   <article class="card mission-card"><span class="num-circle">M03</span><h3>多模态场景理解</h3><p>目标：融合视觉、姿态、地图等信息并解释场景状态；成功条件：持续显示判断置信度和人工复核提示。</p></article>
+   <article class="card mission-card"><span class="num-circle">M04</span><h3>武装任务监督（概念）</h3><p>目标：研究武装任务的授权与风险治理；成功条件：关键任务状态可审批、可禁止、可终止且可审计。</p></article>
+   <article class="card mission-card"><span class="num-circle">M05</span><h3>人机接管与安全回收</h3><p>目标：失联、故障或任务结束时优先保障人员和设备安全；成功条件：进入受控安全状态并保留日志。</p></article>
+   <article class="card mission-card"><span class="num-circle">M+</span><h3>拓展：后勤与巡检</h3><p>物资运输、通信中继和工业巡检可以作为衍生用途，但不是本组选题的主定位。</p></article>
+  </div>
+  <div class="section-heading" style="margin:54px 0 20px">
+   <h2 style="font-size:1.8rem">A-00 · 具身智能地面人机协同体系</h2>
+   <p>SoS 不只是单台四足机器狗；人工授权、通信、地图、协同设备、保障与安全管理共同决定任务可用性。</p>
+  </div>
+  <div class="ecosystem">
+   <article class="eco-card"><span class="id mono">A-01</span><h3>指挥与任务管理</h3><p>制定总体任务、行动限制、优先级与合规要求。</p></article>
+   <article class="eco-card"><span class="id mono">A-02</span><h3>人工授权与操作</h3><p>操作员审批任务、接收告警、接管和发出终止指令。</p></article>
+   <article class="eco-card featured"><span class="id mono">A-03 · CORE</span><h3>具身智能四足平台单元</h3><p>由 Q-01 与操作流程共同构成，负责场景感知、机动执行、状态解释与回传。</p></article>
+   <article class="eco-card"><span class="id mono">A-04</span><h3>协同通信网络</h3><p>传送控制、状态与观测信息，报告链路质量和中断事件。</p></article>
+   <article class="eco-card"><span class="id mono">A-05</span><h3>态势汇聚与模型评估</h3><p>展示地图、风险、置信度、过程回放和模型版本信息。</p></article>
+   <article class="eco-card"><span class="id mono">A-06</span><h3>能源与维护保障</h3><p>管理电池、检修、软件维护及试验环境支持。</p></article>
+   <article class="eco-card"><span class="id mono">A-07</span><h3>安全与合规监督</h3><p>监督规则、人工责任、日志与关键状态约束。</p></article>
+   <article class="eco-card"><span class="id mono">A-08</span><h3>其他协同平台</h3><p>其他地面平台或信息中继节点提供协同支持，不在本次展开。</p></article>
+  </div>
+  <div class="eco-summary"><strong style="color:var(--mint)">SoS 总体闭环：</strong>任务制定 → 人工审核 → 机器人场景感知与受限移动 → 数据回传与人工复核 → 安全控制、归档和维护。武装任务仅体现为审批、治理与合规状态，不提供具体攻击行为路径。</div>
+ </div>
+</section>
+
+ <section class="section" id="vehicle">
+ <div class="container">
+  <div class="section-kicker">03 / VEHICLE LEVEL</div>
+  <div class="section-heading"><h2>整机层：具身智能的<br>物理行动载体。</h2>
+   <p>本组选择 <strong>V-01 武装四足无人作战机器人（概念）</strong>作为核心整机。它通过感知、规划和四足行动与环境形成闭环，而不是把机器人简单理解成“运送物资的小车”。</p></div>
+  <div class="vehicle-main">
+   <article class="card">
+    <span class="eyebrow">V-01 / SELECTED VEHICLE</span>
+    <h3 style="margin:12px 0">哨界 Q-01 · 武装四足无人作战机器人</h3>
+    <p>核心研究能力：四足地形适应、多模态场景感知、具身智能任务理解、受限移动规划、人机协同操作以及武装任务的授权状态管理。武装功能仅作为<strong>受严格人工控制的任务能力边界</strong>进行抽象建模。</p>
+    <div class="vehicle-targets">
+     <div><strong>8 systems</strong><span>具身智能与机器人功能系统</span></div>
+     <div><strong>≥ 60 min</strong><span>标准测试工况续航目标</span></div>
+     <div><strong>100%</strong><span>关键任务操作可留痕的目标</span></div>
+     <div><strong>1 operator</strong><span>人工监督、暂停、接管及终止</span></div>
+    </div>
+    <div class="note" style="font-size:.78rem;margin-top:19px">本方案为课程概念设计：上述数值是<strong>待验证目标</strong>，不是样机实测结果。没有武器系统工程图、制造方案或攻击算法。</div>
+   </article>
+   <div class="vehicle-family">
+    <div class="vehicle-unit selected"><b class="mono">V-01</b><div><strong>哨界 Q-01 武装四足机器人 · 核心整机</strong><span>展开 8 系统 / 24 子系统 / 96 模块</span></div></div>
+    <div class="vehicle-unit"><b class="mono">V-02</b><div><strong>信息中继协同平台 · 体系拓展</strong><span>提供态势数据转发与协同接口，不在本组内部展开</span></div></div>
+    <div class="vehicle-unit"><b class="mono">V-03</b><div><strong>维护与保障平台 · 体系拓展</strong><span>提供能源补给、设备检修与安全回收支持</span></div></div>
+    <div class="card"><span class="eyebrow">EMBODIED INTELLIGENCE / BOUNDARY</span>
+     <p style="margin:10px 0 0">具身智能不是单独一个摄像头或算法；它依靠 <strong style="color:var(--ink)">S02 感知 → S03 任务理解与规划 → S01 动作执行 → S02/S07 反馈监测</strong> 的跨系统闭环来体现。武装相关内容只讨论授权、监督、安全和合规责任。</p></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+ <section class="section" id="systems">
+  <div class="container">
+   <div class="section-kicker">04 / SYSTEMS → SUBSYSTEMS → MODULES</div>
+   <div class="section-heading"><h2>八大系统，<br>向下拆到具体模块。</h2>
+    <p>每个系统规定功能、输入、输出；每个系统下设 <strong>3 个子系统</strong>，每个子系统拆分为 <strong>4 个模块</strong>。具身智能跨越感知、规划与运动反馈多个系统。可按名称、功能或模块名称搜索并展开详细分解。</p></div>
+   <div class="system-toolbar">
+    <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="system-search" type="search" placeholder="搜索：具身智能 / 场景理解 / 授权 / 急停 …" aria-label="搜索系统及其模块"></label>
+    <span class="system-count" id="system-count">显示 8 / 8 个系统</span>
+    <button class="btn btn-quiet" type="button" id="expand-all">全部展开</button>
+   </div>
+   <div class="systems-grid" id="systems-grid"><article class="sys-card" data-search="四足机动与运动控制系统 locomotion &amp; control 完成姿态稳定、足端接触判断、低速行走与安全停机，保证机器狗在非结构化地面可控移动。 关节驱动与机械传动 把运动控制指令转化为各腿关节的可控动作。 关节电机 减速与传动组件 位置编码器 电机驱动器 步态与姿态控制 协调四足接触与机身姿态，监测稳定性。 惯性测量单元 imu 足端接触传感器 姿态估计模块 步态协调控制器 运动安全与状态反馈 在异常姿态、过温或路径受阻时转入保守状态。 速度限制器 倾倒保护逻辑 关节温度采集 运动状态记录器" id="system-S01">
+        <div class="sys-top"><div class="sys-icon">◈</div><span class="mono sys-number">S01</span></div>
+        <h3>四足机动与运动控制系统</h3><div class="sys-en">LOCOMOTION &amp; CONTROL</div>
+        <p class="sys-role">完成姿态稳定、足端接触判断、低速行走与安全停机，保证机器狗在非结构化地面可控移动。</p>
+        <div class="io-line"><span>IN</span><p>运动指令、地形提示、关节/姿态反馈</p></div>
+        <div class="io-line"><span>OUT</span><p>关节运动、移动状态、异常告警</p></div>
+        <details class="sys-details" open>
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS01.1</span><strong>关节驱动与机械传动</strong></div>
+            <p>把运动控制指令转化为各腿关节的可控动作。</p><div class="module-row"><span class="module-pill" title="SS01.1 · Module 01">SS01.1.1 · 关节电机</span><span class="module-pill" title="SS01.1 · Module 02">SS01.1.2 · 减速与传动组件</span><span class="module-pill" title="SS01.1 · Module 03">SS01.1.3 · 位置编码器</span><span class="module-pill" title="SS01.1 · Module 04">SS01.1.4 · 电机驱动器</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS01.2</span><strong>步态与姿态控制</strong></div>
+            <p>协调四足接触与机身姿态，监测稳定性。</p><div class="module-row"><span class="module-pill" title="SS01.2 · Module 01">SS01.2.1 · 惯性测量单元 IMU</span><span class="module-pill" title="SS01.2 · Module 02">SS01.2.2 · 足端接触传感器</span><span class="module-pill" title="SS01.2 · Module 03">SS01.2.3 · 姿态估计模块</span><span class="module-pill" title="SS01.2 · Module 04">SS01.2.4 · 步态协调控制器</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS01.3</span><strong>运动安全与状态反馈</strong></div>
+            <p>在异常姿态、过温或路径受阻时转入保守状态。</p><div class="module-row"><span class="module-pill" title="SS01.3 · Module 01">SS01.3.1 · 速度限制器</span><span class="module-pill" title="SS01.3 · Module 02">SS01.3.2 · 倾倒保护逻辑</span><span class="module-pill" title="SS01.3 · Module 03">SS01.3.3 · 关节温度采集</span><span class="module-pill" title="SS01.3 · Module 04">SS01.3.4 · 运动状态记录器</span></div></div></div>
+        </details></article>
+<article class="sys-card" data-search="多模态感知与场景理解系统 multimodal perception &amp; spatial ai 融合视觉、惯性与环境线索，理解地形、可通行区域与环境风险，向具身智能决策层输出带置信度的场景表征。 视觉与空间感知 重建周边几何结构，识别台阶、障碍及通行边界。 深度/双目相机 近距障碍传感器 局部空间地图模块 辅助照明组件 多传感器融合定位 综合运动反馈和视觉线索输出带不确定度的位置估计。 视觉里程计模块 惯性数据融合模块 本地地图缓存 定位质量监测器 具身语义场景理解 把感知结果转化成供任务管理使用的语义标签与安全约束，不进行自动攻击目标判定。 场景语义标注器 可通行区域判断 观测可信度评估器 时间同步模块" id="system-S02">
+        <div class="sys-top"><div class="sys-icon">⌁</div><span class="mono sys-number">S02</span></div>
+        <h3>多模态感知与场景理解系统</h3><div class="sys-en">MULTIMODAL PERCEPTION &amp; SPATIAL AI</div>
+        <p class="sys-role">融合视觉、惯性与环境线索，理解地形、可通行区域与环境风险，向具身智能决策层输出带置信度的场景表征。</p>
+        <div class="io-line"><span>IN</span><p>相机、深度、惯性和环境传感器数据</p></div>
+        <div class="io-line"><span>OUT</span><p>三维局部地图、定位状态、语义场景和风险提示</p></div>
+        <details class="sys-details" >
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS02.1</span><strong>视觉与空间感知</strong></div>
+            <p>重建周边几何结构，识别台阶、障碍及通行边界。</p><div class="module-row"><span class="module-pill" title="SS02.1 · Module 01">SS02.1.1 · 深度/双目相机</span><span class="module-pill" title="SS02.1 · Module 02">SS02.1.2 · 近距障碍传感器</span><span class="module-pill" title="SS02.1 · Module 03">SS02.1.3 · 局部空间地图模块</span><span class="module-pill" title="SS02.1 · Module 04">SS02.1.4 · 辅助照明组件</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS02.2</span><strong>多传感器融合定位</strong></div>
+            <p>综合运动反馈和视觉线索输出带不确定度的位置估计。</p><div class="module-row"><span class="module-pill" title="SS02.2 · Module 01">SS02.2.1 · 视觉里程计模块</span><span class="module-pill" title="SS02.2 · Module 02">SS02.2.2 · 惯性数据融合模块</span><span class="module-pill" title="SS02.2 · Module 03">SS02.2.3 · 本地地图缓存</span><span class="module-pill" title="SS02.2 · Module 04">SS02.2.4 · 定位质量监测器</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS02.3</span><strong>具身语义场景理解</strong></div>
+            <p>把感知结果转化成供任务管理使用的语义标签与安全约束，不进行自动攻击目标判定。</p><div class="module-row"><span class="module-pill" title="SS02.3 · Module 01">SS02.3.1 · 场景语义标注器</span><span class="module-pill" title="SS02.3 · Module 02">SS02.3.2 · 可通行区域判断</span><span class="module-pill" title="SS02.3 · Module 03">SS02.3.3 · 观测可信度评估器</span><span class="module-pill" title="SS02.3 · Module 04">SS02.3.4 · 时间同步模块</span></div></div></div>
+        </details></article>
+<article class="sys-card" data-search="具身智能决策与任务管理系统 embodied ai &amp; mission management 将场景信息与人工赋予的目标结合，提供可解释的移动和任务流程建议；允许人工拒绝、暂停和接管。 任务理解与行为约束 把操作员意图表达为有限的任务状态与安全边界。 任务指令解析器 任务模式状态机 区域/行为边界配置 人工批准入口 动作规划与反馈闭环 根据地形和传感反馈形成保守的移动建议并支持随时接管。 局部路径规划模块 可通行性评估模块 异常行为抑制器 人工接管切换模块 可解释记录与模型治理 对机器人每一项任务状态变化保留依据并支持仿真评估。 行为事件日志 任务过程回放器 仿真评估接口 模型版本记录器" id="system-S03">
+        <div class="sys-top"><div class="sys-icon">◇</div><span class="mono sys-number">S03</span></div>
+        <h3>具身智能决策与任务管理系统</h3><div class="sys-en">EMBODIED AI &amp; MISSION MANAGEMENT</div>
+        <p class="sys-role">将场景信息与人工赋予的目标结合，提供可解释的移动和任务流程建议；允许人工拒绝、暂停和接管。</p>
+        <div class="io-line"><span>IN</span><p>任务约束、场景表征、人工授权</p></div>
+        <div class="io-line"><span>OUT</span><p>受限动作请求、状态说明、过程记录</p></div>
+        <details class="sys-details" >
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS03.1</span><strong>任务理解与行为约束</strong></div>
+            <p>把操作员意图表达为有限的任务状态与安全边界。</p><div class="module-row"><span class="module-pill" title="SS03.1 · Module 01">SS03.1.1 · 任务指令解析器</span><span class="module-pill" title="SS03.1 · Module 02">SS03.1.2 · 任务模式状态机</span><span class="module-pill" title="SS03.1 · Module 03">SS03.1.3 · 区域/行为边界配置</span><span class="module-pill" title="SS03.1 · Module 04">SS03.1.4 · 人工批准入口</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS03.2</span><strong>动作规划与反馈闭环</strong></div>
+            <p>根据地形和传感反馈形成保守的移动建议并支持随时接管。</p><div class="module-row"><span class="module-pill" title="SS03.2 · Module 01">SS03.2.1 · 局部路径规划模块</span><span class="module-pill" title="SS03.2 · Module 02">SS03.2.2 · 可通行性评估模块</span><span class="module-pill" title="SS03.2 · Module 03">SS03.2.3 · 异常行为抑制器</span><span class="module-pill" title="SS03.2 · Module 04">SS03.2.4 · 人工接管切换模块</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS03.3</span><strong>可解释记录与模型治理</strong></div>
+            <p>对机器人每一项任务状态变化保留依据并支持仿真评估。</p><div class="module-row"><span class="module-pill" title="SS03.3 · Module 01">SS03.3.1 · 行为事件日志</span><span class="module-pill" title="SS03.3 · Module 02">SS03.3.2 · 任务过程回放器</span><span class="module-pill" title="SS03.3 · Module 03">SS03.3.3 · 仿真评估接口</span><span class="module-pill" title="SS03.3 · Module 04">SS03.3.4 · 模型版本记录器</span></div></div></div>
+        </details></article>
+<article class="sys-card" data-search="通信与人机协同系统 comms &amp; human supervision 连接操作员与机器狗，完成任务授权、远程状态监督、人工接管、通信状态评估与审计。 机器人通信链路 维护数据传输与链路状态，不预设任何具体战术频段。 通信收发单元 备用通信接口 链路质量监测 失联安全策略 操作员控制终端 把复杂机器人状态汇总为可理解、可操作的界面。 操控面板 地图与视频联显 人工确认按钮 紧急停机控件 数据安全与协同接口 对身份、权限和消息完整性进行管理。 身份认证模块 访问权限管理 指令完整性校验 协同信息接口" id="system-S04">
+        <div class="sys-top"><div class="sys-icon">◉</div><span class="mono sys-number">S04</span></div>
+        <h3>通信与人机协同系统</h3><div class="sys-en">COMMS &amp; HUMAN SUPERVISION</div>
+        <p class="sys-role">连接操作员与机器狗，完成任务授权、远程状态监督、人工接管、通信状态评估与审计。</p>
+        <div class="io-line"><span>IN</span><p>操作员批准、控制指令、环境与安全状态</p></div>
+        <div class="io-line"><span>OUT</span><p>遥操作、态势显示、审批与告警记录</p></div>
+        <details class="sys-details" >
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS04.1</span><strong>机器人通信链路</strong></div>
+            <p>维护数据传输与链路状态，不预设任何具体战术频段。</p><div class="module-row"><span class="module-pill" title="SS04.1 · Module 01">SS04.1.1 · 通信收发单元</span><span class="module-pill" title="SS04.1 · Module 02">SS04.1.2 · 备用通信接口</span><span class="module-pill" title="SS04.1 · Module 03">SS04.1.3 · 链路质量监测</span><span class="module-pill" title="SS04.1 · Module 04">SS04.1.4 · 失联安全策略</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS04.2</span><strong>操作员控制终端</strong></div>
+            <p>把复杂机器人状态汇总为可理解、可操作的界面。</p><div class="module-row"><span class="module-pill" title="SS04.2 · Module 01">SS04.2.1 · 操控面板</span><span class="module-pill" title="SS04.2 · Module 02">SS04.2.2 · 地图与视频联显</span><span class="module-pill" title="SS04.2 · Module 03">SS04.2.3 · 人工确认按钮</span><span class="module-pill" title="SS04.2 · Module 04">SS04.2.4 · 紧急停机控件</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS04.3</span><strong>数据安全与协同接口</strong></div>
+            <p>对身份、权限和消息完整性进行管理。</p><div class="module-row"><span class="module-pill" title="SS04.3 · Module 01">SS04.3.1 · 身份认证模块</span><span class="module-pill" title="SS04.3 · Module 02">SS04.3.2 · 访问权限管理</span><span class="module-pill" title="SS04.3 · Module 03">SS04.3.3 · 指令完整性校验</span><span class="module-pill" title="SS04.3 · Module 04">SS04.3.4 · 协同信息接口</span></div></div></div>
+        </details></article>
+<article class="sys-card" data-search="能源管理与热管理系统 power &amp; thermal 向运动、感知、计算与载荷提供稳定电能，监控续航、温度和异常供电。 电池与能量评估 对电量和电池健康进行监控，支持安全换电。 可更换电池包 电池管理单元 bms 剩余电量估计 电池锁止机构 供配电与保护 把主电源分配给机动和任务负载并提供电气保护。 配电保护板 电压转换模块 电流采集模块 供电优先级控制 散热与温度保护 监测关键位置热状态并触发安全降载。 关键点温度传感器 散热风道/风扇 热隔离结构 热保护告警逻辑" id="system-S05">
+        <div class="sys-top"><div class="sys-icon">▣</div><span class="mono sys-number">S05</span></div>
+        <h3>能源管理与热管理系统</h3><div class="sys-en">POWER &amp; THERMAL</div>
+        <p class="sys-role">向运动、感知、计算与载荷提供稳定电能，监控续航、温度和异常供电。</p>
+        <div class="io-line"><span>IN</span><p>电池状态、负载需求、温度</p></div>
+        <div class="io-line"><span>OUT</span><p>分级供电、电量估计、限功率告警</p></div>
+        <details class="sys-details" >
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS05.1</span><strong>电池与能量评估</strong></div>
+            <p>对电量和电池健康进行监控，支持安全换电。</p><div class="module-row"><span class="module-pill" title="SS05.1 · Module 01">SS05.1.1 · 可更换电池包</span><span class="module-pill" title="SS05.1 · Module 02">SS05.1.2 · 电池管理单元 BMS</span><span class="module-pill" title="SS05.1 · Module 03">SS05.1.3 · 剩余电量估计</span><span class="module-pill" title="SS05.1 · Module 04">SS05.1.4 · 电池锁止机构</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS05.2</span><strong>供配电与保护</strong></div>
+            <p>把主电源分配给机动和任务负载并提供电气保护。</p><div class="module-row"><span class="module-pill" title="SS05.2 · Module 01">SS05.2.1 · 配电保护板</span><span class="module-pill" title="SS05.2 · Module 02">SS05.2.2 · 电压转换模块</span><span class="module-pill" title="SS05.2 · Module 03">SS05.2.3 · 电流采集模块</span><span class="module-pill" title="SS05.2 · Module 04">SS05.2.4 · 供电优先级控制</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS05.3</span><strong>散热与温度保护</strong></div>
+            <p>监测关键位置热状态并触发安全降载。</p><div class="module-row"><span class="module-pill" title="SS05.3 · Module 01">SS05.3.1 · 关键点温度传感器</span><span class="module-pill" title="SS05.3 · Module 02">SS05.3.2 · 散热风道/风扇</span><span class="module-pill" title="SS05.3 · Module 03">SS05.3.3 · 热隔离结构</span><span class="module-pill" title="SS05.3 · Module 04">SS05.3.4 · 热保护告警逻辑</span></div></div></div>
+        </details></article>
+<article class="sys-card" data-search="机体结构与通用设备舱系统 structure &amp; universal bay 支撑四足执行机构和计算、能源、感知单元，提供机体防护、维修可达性及通用设备舱边界。 承载机体与防护 实现刚度、抗振和必要的环境防护。 主承载框架 保护外壳 防尘密封件 耐磨防滑足垫 维修与模块化设计 方便检查、拆装、线束追踪和更换。 快拆维护盖板 内部线束固定架 接口维护标识 检修通道 通用设备舱管理 为观测、计算与状态记录设备定义通用、可维护的空间与状态边界。 通用设备舱 设备状态标识 维护接线接口 舱盖锁闭状态传感器" id="system-S06">
+        <div class="sys-top"><div class="sys-icon">▧</div><span class="mono sys-number">S06</span></div>
+        <h3>机体结构与通用设备舱系统</h3><div class="sys-en">STRUCTURE &amp; UNIVERSAL BAY</div>
+        <p class="sys-role">支撑四足执行机构和计算、能源、感知单元，提供机体防护、维修可达性及通用设备舱边界。</p>
+        <div class="io-line"><span>IN</span><p>质量分配、振动与维护要求</p></div>
+        <div class="io-line"><span>OUT</span><p>结构支撑、防护能力和可检查设备接口</p></div>
+        <details class="sys-details" >
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS06.1</span><strong>承载机体与防护</strong></div>
+            <p>实现刚度、抗振和必要的环境防护。</p><div class="module-row"><span class="module-pill" title="SS06.1 · Module 01">SS06.1.1 · 主承载框架</span><span class="module-pill" title="SS06.1 · Module 02">SS06.1.2 · 保护外壳</span><span class="module-pill" title="SS06.1 · Module 03">SS06.1.3 · 防尘密封件</span><span class="module-pill" title="SS06.1 · Module 04">SS06.1.4 · 耐磨防滑足垫</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS06.2</span><strong>维修与模块化设计</strong></div>
+            <p>方便检查、拆装、线束追踪和更换。</p><div class="module-row"><span class="module-pill" title="SS06.2 · Module 01">SS06.2.1 · 快拆维护盖板</span><span class="module-pill" title="SS06.2 · Module 02">SS06.2.2 · 内部线束固定架</span><span class="module-pill" title="SS06.2 · Module 03">SS06.2.3 · 接口维护标识</span><span class="module-pill" title="SS06.2 · Module 04">SS06.2.4 · 检修通道</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS06.3</span><strong>通用设备舱管理</strong></div>
+            <p>为观测、计算与状态记录设备定义通用、可维护的空间与状态边界。</p><div class="module-row"><span class="module-pill" title="SS06.3 · Module 01">SS06.3.1 · 通用设备舱</span><span class="module-pill" title="SS06.3 · Module 02">SS06.3.2 · 设备状态标识</span><span class="module-pill" title="SS06.3 · Module 03">SS06.3.3 · 维护接线接口</span><span class="module-pill" title="SS06.3 · Module 04">SS06.3.4 · 舱盖锁闭状态传感器</span></div></div></div>
+        </details></article>
+<article class="sys-card" data-search="安全监控与健康管理系统 safety &amp; health 在人员靠近、设备故障、通信异常和数据安全事件中优先保障安全及可追责性。 功能安全与应急处置 提供独立停止入口以及保守运行状态。 实体急停开关 安全监控控制器 限速/停机策略 安全状态指示灯 自检与维护管理 定期检查各项能力的可用性。 开机自检清单 故障码管理器 设备健康监测 维护寿命记录 隐私与数据治理 限制不必要采集并记录访问与处理行为。 最小数据采集策略 本地加密存储 访问审计日志 数据清理流程" id="system-S07">
+        <div class="sys-top"><div class="sys-icon">✳</div><span class="mono sys-number">S07</span></div>
+        <h3>安全监控与健康管理系统</h3><div class="sys-en">SAFETY &amp; HEALTH</div>
+        <p class="sys-role">在人员靠近、设备故障、通信异常和数据安全事件中优先保障安全及可追责性。</p>
+        <div class="io-line"><span>IN</span><p>故障信息、紧停输入、系统日志</p></div>
+        <div class="io-line"><span>OUT</span><p>降级/停机、健康状态、审计记录</p></div>
+        <details class="sys-details" >
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS07.1</span><strong>功能安全与应急处置</strong></div>
+            <p>提供独立停止入口以及保守运行状态。</p><div class="module-row"><span class="module-pill" title="SS07.1 · Module 01">SS07.1.1 · 实体急停开关</span><span class="module-pill" title="SS07.1 · Module 02">SS07.1.2 · 安全监控控制器</span><span class="module-pill" title="SS07.1 · Module 03">SS07.1.3 · 限速/停机策略</span><span class="module-pill" title="SS07.1 · Module 04">SS07.1.4 · 安全状态指示灯</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS07.2</span><strong>自检与维护管理</strong></div>
+            <p>定期检查各项能力的可用性。</p><div class="module-row"><span class="module-pill" title="SS07.2 · Module 01">SS07.2.1 · 开机自检清单</span><span class="module-pill" title="SS07.2 · Module 02">SS07.2.2 · 故障码管理器</span><span class="module-pill" title="SS07.2 · Module 03">SS07.2.3 · 设备健康监测</span><span class="module-pill" title="SS07.2 · Module 04">SS07.2.4 · 维护寿命记录</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS07.3</span><strong>隐私与数据治理</strong></div>
+            <p>限制不必要采集并记录访问与处理行为。</p><div class="module-row"><span class="module-pill" title="SS07.3 · Module 01">SS07.3.1 · 最小数据采集策略</span><span class="module-pill" title="SS07.3 · Module 02">SS07.3.2 · 本地加密存储</span><span class="module-pill" title="SS07.3 · Module 03">SS07.3.3 · 访问审计日志</span><span class="module-pill" title="SS07.3 · Module 04">SS07.3.4 · 数据清理流程</span></div></div></div>
+        </details></article>
+<article class="sys-card" data-search="武装任务授权与安全约束系统（概念） armed mission governance — concept 将武装属性限定在体系级任务授权、状态监督、人工终止和合规审计范畴；不展开武器结构、火控、瞄准或攻击执行机制。 武装任务模式授权管理 用抽象状态表达武装任务是否获得人工批准，以及是否被撤销。 人工任务授权记录 任务状态显示组件 权限确认与撤销模块 授权事件审计接口 武装状态安全监督（抽象） 仅检查规则与状态是否满足安全前提，不包含任何火控或武器执行逻辑。 任务模式隔离策略 异常状态告警模块 人工禁止与终止入口 状态一致性检查模块 人员责任与合规审查 规范人工复核、操作责任、事件审计与概念评审流程。 人员责任确认界面 场景风险复核清单 操作记录存证模块 合规评审检查表" id="system-S08">
+        <div class="sys-top"><div class="sys-icon">⊕</div><span class="mono sys-number">S08</span></div>
+        <h3>武装任务授权与安全约束系统（概念）</h3><div class="sys-en">ARMED MISSION GOVERNANCE — CONCEPT</div>
+        <p class="sys-role">将武装属性限定在体系级任务授权、状态监督、人工终止和合规审计范畴；不展开武器结构、火控、瞄准或攻击执行机制。</p>
+        <div class="io-line"><span>IN</span><p>经授权的任务类型、人员审批记录、安全约束</p></div>
+        <div class="io-line"><span>OUT</span><p>任务授权状态、禁止/终止信号与审计记录</p></div>
+        <details class="sys-details" >
+          <summary>展开 3 个子系统 · 12 个模块 <span class="summary-chevron">＋</span></summary>
+          <div class="sub-list"><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS08.1</span><strong>武装任务模式授权管理</strong></div>
+            <p>用抽象状态表达武装任务是否获得人工批准，以及是否被撤销。</p><div class="module-row"><span class="module-pill" title="SS08.1 · Module 01">SS08.1.1 · 人工任务授权记录</span><span class="module-pill" title="SS08.1 · Module 02">SS08.1.2 · 任务状态显示组件</span><span class="module-pill" title="SS08.1 · Module 03">SS08.1.3 · 权限确认与撤销模块</span><span class="module-pill" title="SS08.1 · Module 04">SS08.1.4 · 授权事件审计接口</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS08.2</span><strong>武装状态安全监督（抽象）</strong></div>
+            <p>仅检查规则与状态是否满足安全前提，不包含任何火控或武器执行逻辑。</p><div class="module-row"><span class="module-pill" title="SS08.2 · Module 01">SS08.2.1 · 任务模式隔离策略</span><span class="module-pill" title="SS08.2 · Module 02">SS08.2.2 · 异常状态告警模块</span><span class="module-pill" title="SS08.2 · Module 03">SS08.2.3 · 人工禁止与终止入口</span><span class="module-pill" title="SS08.2 · Module 04">SS08.2.4 · 状态一致性检查模块</span></div></div><div class="sub-item">
+            <div class="sub-top"><span class="mono sub-id">SS08.3</span><strong>人员责任与合规审查</strong></div>
+            <p>规范人工复核、操作责任、事件审计与概念评审流程。</p><div class="module-row"><span class="module-pill" title="SS08.3 · Module 01">SS08.3.1 · 人员责任确认界面</span><span class="module-pill" title="SS08.3 · Module 02">SS08.3.2 · 场景风险复核清单</span><span class="module-pill" title="SS08.3 · Module 03">SS08.3.3 · 操作记录存证模块</span><span class="module-pill" title="SS08.3 · Module 04">SS08.3.4 · 合规评审检查表</span></div></div></div>
+        </details></article>
+   </div>
+   <div class="no-results" id="no-results" hidden>没有匹配内容，请尝试搜索系统、子系统或模块的其他名称。</div>
+  </div>
+ </section>
+
+ <section class="section" id="interfaces">
+ <div class="container">
+  <div class="section-kicker">05 / INTERFACES &amp; OPERATIONS</div>
+  <div class="section-heading"><h2>具身智能的关键，<br>是感知与行动闭环。</h2>
+   <p>感知系统负责观察环境，具身智能系统负责理解并规划，运动系统执行可控动作，安全系统监督整个过程。人工操作员始终可以接管。</p></div>
+  <div class="interface-layout">
+   <div class="flow-diagram">
+    <div class="flow-node">人类指挥与人工授权<small>A-01/A-02 → S04 · 任务与规则确认</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">具身智能决策与任务编排<small>S03 · 场景理解 / 受限规划 / 决策理由</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-bottom">
+     <div class="flow-node">S02<br>环境感知<small>空间 / 语义</small></div>
+     <div class="flow-node">S01<br>四足执行<small>运动 / 反馈</small></div>
+     <div class="flow-node">S08<br>武装任务治理<small>授权 / 审计</small></div>
+    </div>
+    <div class="flow-feedback">↖ S05 能源、S06 结构、S07 安全贯穿各环节 ↗<br>↑ S02/S01 实时反馈 → S03 更新行动状态 → S04 人工复核 ↑</div>
+   </div>
+   <div class="card">
+    <span class="eyebrow">INTERFACE REGISTER / I01–I08</span>
+    <ul class="interface-list">
+     <li><b>I-01</b>A02 ↔ S04：任务授权、状态查看与接管</li>
+     <li><b>I-02</b>S02 → S03：地形地图、语义状态与置信度</li>
+     <li><b>I-03</b>S03 → S01：限定速度与区域内的移动请求</li>
+     <li><b>I-04</b>S01 → S02/S03：关节状态、机体姿态与运动反馈</li>
+     <li><b>I-05</b>S05 → 全系统：电能与剩余工作时间告警</li>
+     <li><b>I-06</b>S07 → S01/S03：异常降级与紧急停止</li>
+     <li><b>I-07</b>S04 ↔ A05：态势、告警、操作日志与模型版本</li>
+     <li><b>I-08</b>S08 ↔ S04/S07：人工审批状态、禁用与审计（概念）</li>
+    </ul>
+   </div>
+  </div>
+  <div class="dashed-divider"></div>
+  <h3 style="margin:0 0 20px;font-size:1.5rem">典型工作流 · Human-supervised embodied AI</h3>
+  <div class="phases">
+   <article class="phase"><span class="phase-count">PHASE 01</span><h3>规则与任务</h3><p>确认任务边界、操作员责任、通信与安全预案。</p></article>
+   <article class="phase"><span class="phase-count">PHASE 02</span><h3>感知与定位</h3><p>机器人观察地形并对定位质量作出评估。</p></article>
+   <article class="phase"><span class="phase-count">PHASE 03</span><h3>具身动作闭环</h3><p>根据环境反馈低速行走，持续监测运动误差。</p></article>
+   <article class="phase"><span class="phase-count">PHASE 04</span><h3>人工审核</h3><p>操作员查看场景与任务状态，可暂停或直接接管。</p></article>
+   <article class="phase"><span class="phase-count">PHASE 05</span><h3>安全终止</h3><p>故障或结束后停机回收、审计日志并复盘。</p></article>
+  </div>
+ </div>
+</section>
+
+ <section class="section" id="trace">
+ <div class="container">
+  <div class="section-kicker">06 / END-TO-END TRACEABILITY</div>
+  <div class="section-heading"><h2>从任务到模块，<br>每一步都找得到依据。</h2>
+   <p>选取五条典型任务，建立完整的<strong>Mission → SoS → Vehicles → Systems → Subsystems → Modules</strong>路径。每条路径同时关联需求编号与验收测试。</p></div>
+  <div class="trace-grid"><article class="trace-card"><div class="trace-top"><span class="eyebrow">M-01 / TRACE PATH</span><span class="mono">R-04 / T-04</span></div>
+    <h3>危险地形先行侦察</h3><div class="trace-steps"><div><span>MISSION</span><b>危险地形先行侦察</b><small>M-01</small></div><div><span>SoS</span><b>具身智能四足平台单元</b><small>A-03</small></div><div><span>VEHICLE</span><b>Q-01 四足机器人</b><small>V-01</small></div><div><span>SYSTEM</span><b>多模态感知与场景理解</b><small>S02</small></div><div><span>SUBSYSTEM</span><b>视觉与空间感知</b><small>SS02.1</small></div><div><span>MODULE</span><b>深度/双目相机</b><small>SS02.1.1</small></div></div></article><article class="trace-card"><div class="trace-top"><span class="eyebrow">M-02 / TRACE PATH</span><span class="mono">R-03 / T-03</span></div>
+    <h3>具身自主机动巡查</h3><div class="trace-steps"><div><span>MISSION</span><b>具身自主机动巡查</b><small>M-02</small></div><div><span>SoS</span><b>具身智能四足平台单元</b><small>A-03</small></div><div><span>VEHICLE</span><b>Q-01 四足机器人</b><small>V-01</small></div><div><span>SYSTEM</span><b>四足机动与运动控制</b><small>S01</small></div><div><span>SUBSYSTEM</span><b>步态与姿态控制</b><small>SS01.2</small></div><div><span>MODULE</span><b>姿态估计模块</b><small>SS01.2.3</small></div></div></article><article class="trace-card"><div class="trace-top"><span class="eyebrow">M-03 / TRACE PATH</span><span class="mono">R-08 / T-08</span></div>
+    <h3>多模态场景理解</h3><div class="trace-steps"><div><span>MISSION</span><b>多模态场景理解</b><small>M-03</small></div><div><span>SoS</span><b>态势汇聚与模型评估</b><small>A-05</small></div><div><span>VEHICLE</span><b>Q-01 四足机器人</b><small>V-01</small></div><div><span>SYSTEM</span><b>多模态感知与场景理解</b><small>S02</small></div><div><span>SUBSYSTEM</span><b>具身语义场景理解</b><small>SS02.3</small></div><div><span>MODULE</span><b>观测可信度评估器</b><small>SS02.3.3</small></div></div></article><article class="trace-card"><div class="trace-top"><span class="eyebrow">M-04 / TRACE PATH</span><span class="mono">R-12 / T-12</span></div>
+    <h3>武装任务监督（概念）</h3><div class="trace-steps"><div><span>MISSION</span><b>武装任务监督（概念）</b><small>M-04</small></div><div><span>SoS</span><b>人工授权与操作</b><small>A-02</small></div><div><span>VEHICLE</span><b>Q-01 四足机器人</b><small>V-01</small></div><div><span>SYSTEM</span><b>武装任务治理</b><small>S08</small></div><div><span>SUBSYSTEM</span><b>武装任务模式授权管理</b><small>SS08.1</small></div><div><span>MODULE</span><b>人工任务授权记录</b><small>SS08.1.1</small></div></div></article><article class="trace-card"><div class="trace-top"><span class="eyebrow">M-05 / TRACE PATH</span><span class="mono">R-07 / T-07</span></div>
+    <h3>人机接管与安全回收</h3><div class="trace-steps"><div><span>MISSION</span><b>人机接管与安全回收</b><small>M-05</small></div><div><span>SoS</span><b>安全与合规监督</b><small>A-07</small></div><div><span>VEHICLE</span><b>Q-01 四足机器人</b><small>V-01</small></div><div><span>SYSTEM</span><b>安全监控与健康管理</b><small>S07</small></div><div><span>SUBSYSTEM</span><b>功能安全与应急处置</b><small>SS07.1</small></div><div><span>MODULE</span><b>实体急停开关</b><small>SS07.1.1</small></div></div></article></div>
+  <div class="note"><strong>理解重点：</strong>这些是主责任链，不代表单一模块可以独立完成整个任务。完整执行必须依赖通信、机动、安全、能源等跨系统接口；武装任务链只涵盖人工授权与合规记录，不描述攻击流程。</div>
+ </div>
+</section>
+
+ <section class="section" id="verification">
+ <div class="container">
+  <div class="section-kicker">07 / REQUIREMENTS &amp; V&amp;V</div>
+  <div class="section-heading"><h2>能力必须有需求，<br>需求必须能验证。</h2>
+   <p>为具身智能、人工接管和武装任务授权治理建立<strong>R-01 至 R-18 的设计需求</strong>，每条均指向责任系统和测试方法。这是验证计划，尚不是实测结果。</p></div>
+  <div class="table-shell"><table>
+   <thead><tr><th>需求 ID</th><th>主题</th><th>设计要求 / 判定原则</th><th>责任系统</th><th>验证方式</th></tr></thead>
+   <tbody><tr><td class="mono">R-01</td><td><strong>续航</strong></td><td>在定义的标准巡检工况下，连续运行时间目标 ≥ 60 min</td><td class="mono small">S05 / S01</td><td>T-01 续航试验</td></tr><tr><td class="mono">R-02</td><td><strong>任务授权</strong></td><td>关键任务模式切换必须先获得人工批准并记录时间</td><td class="mono small">S03 / S04 / S08</td><td>T-02 审批流程演示</td></tr><tr><td class="mono">R-03</td><td><strong>具身机动</strong></td><td>在隔离测试场地完成指定障碍路线，并能受控停机</td><td class="mono small">S01 / S02 / S03</td><td>T-03 场地机动测试</td></tr><tr><td class="mono">R-04</td><td><strong>空间感知</strong></td><td>对预设障碍输出地图或风险提示，触发保守减速/停机</td><td class="mono small">S02 / S01</td><td>T-04 障碍场景测试</td></tr><tr><td class="mono">R-05</td><td><strong>人工接管</strong></td><td>操作员可在任何测试阶段暂停、接管和终止移动任务</td><td class="mono small">S03 / S04 / S07</td><td>T-05 接管操作测试</td></tr><tr><td class="mono">R-06</td><td><strong>失联处理</strong></td><td>通信中断后进入预定义安全停止状态并记录事件</td><td class="mono small">S04 / S07</td><td>T-06 链路中断测试</td></tr><tr><td class="mono">R-07</td><td><strong>急停</strong></td><td>实体与界面急停可触发安全停止并留存故障记录</td><td class="mono small">S07 / S04</td><td>T-07 急停功能测试</td></tr><tr><td class="mono">R-08</td><td><strong>可信度</strong></td><td>场景判断及定位存在低置信度时必须提示人工复核</td><td class="mono small">S02 / S03</td><td>T-08 置信度场景模拟</td></tr><tr><td class="mono">R-09</td><td><strong>运动反馈</strong></td><td>操作端可查看机身姿态、关节状态与异常信息</td><td class="mono small">S01 / S04</td><td>T-09 状态反馈演示</td></tr><tr><td class="mono">R-10</td><td><strong>可追溯</strong></td><td>任务授权、接管、模式切换和异常事件有时间戳</td><td class="mono small">S03 / S07 / S08</td><td>T-10 日志审计</td></tr><tr><td class="mono">R-11</td><td><strong>自检</strong></td><td>启动前完成关节、供电、关键传感器和链路自检</td><td class="mono small">S07 / S05</td><td>T-11 自检测试</td></tr><tr><td class="mono">R-12</td><td><strong>武装任务治理</strong></td><td>概念演示中的武装任务状态必须支持人工授权、撤销和审计</td><td class="mono small">S08 / S04 / S07</td><td>T-12 授权状态模拟</td></tr><tr><td class="mono">R-13</td><td><strong>场景解释</strong></td><td>操作终端可展示非攻击性的语义场景、地图和可靠性提示</td><td class="mono small">S02 / S03 / S04</td><td>T-13 场景理解回放</td></tr><tr><td class="mono">R-14</td><td><strong>身份认证</strong></td><td>关键控制与任务下发只允许获得权限的操作员执行</td><td class="mono small">S04 / S07</td><td>T-14 权限检查</td></tr><tr><td class="mono">R-15</td><td><strong>热保护</strong></td><td>关键组件过温时应告警并进入安全降载状态</td><td class="mono small">S05 / S07</td><td>T-15 热异常仿真</td></tr><tr><td class="mono">R-16</td><td><strong>数据保护</strong></td><td>最小化采集并提供授权访问、审计和数据清理流程</td><td class="mono small">S07 / S04</td><td>T-16 数据治理审查</td></tr><tr><td class="mono">R-17</td><td><strong>模型治理</strong></td><td>具身智能模型版本可查询并支持回放、回滚评估</td><td class="mono small">S03 / S07</td><td>T-17 模型版本审查</td></tr><tr><td class="mono">R-18</td><td><strong>可用性</strong></td><td>界面集中显示电量、链路、定位、任务授权和安全状态</td><td class="mono small">S04 / S08</td><td>T-18 可用性评审</td></tr></tbody>
+  </table></div>
+  <div class="dashed-divider"></div>
+  <h3 style="margin:0 0 21px;font-size:1.48rem">Verification 与 Validation 的区别</h3>
+  <p style="color:var(--muted)">Verification（验证）回答“是否按照要求实现了设计”；Validation（确认）回答“整机和体系是否真正满足预期任务”。二者都需要，不能把编写完成的需求表误认为已通过测试。</p>
+  <div class="verify-steps">
+   <div class="verify-step"><span>V1 / MODULE</span><h3>模块级验证</h3><p>验证传感器、控制器、数据记录与急停入口的独立功能。</p></div>
+   <div class="verify-step"><span>V2 / INTEGRATION</span><h3>系统间集成</h3><p>检验感知、规划、运动与安全之间的接口和异常传播。</p></div>
+   <div class="verify-step"><span>V3 / VEHICLE</span><h3>整机受控测试</h3><p>在非武装、安全场地评估移动、续航、回传与人工接管。</p></div>
+   <div class="verify-step"><span>V4 / MISSION</span><h3>任务场景确认</h3><p>用模拟场景检查任务目标、模型解释与操作员责任是否一致。</p></div>
+  </div>
+ </div>
+</section>
+
+ <section class="section" id="risks">
+ <div class="container">
+  <div class="section-kicker">08 / RISK &amp; FAILURE MANAGEMENT</div>
+  <div class="section-heading"><h2>机器人可以失败，<br>系统不能失去边界。</h2>
+   <p>具身智能的不确定性与武装任务的潜在后果要求更严格的责任约束。使用简化 FMEA 思路识别技术、权限和合规风险；关注度仅为课程小组初步判断。</p></div>
+  <div class="table-shell"><table>
+   <thead><tr><th>风险 ID</th><th>失效事件</th><th>可能后果</th><th>初步控制措施</th><th>责任系统</th><th>关注度</th></tr></thead>
+   <tbody><tr><td class="mono">K-01</td><td><strong>四足跌倒或关节卡滞</strong></td><td>设备与周边人员受损</td><td>低速限制、姿态监控、急停与场地隔离</td><td class="mono small">S01 / S07</td><td><span class="risk high">高</span></td></tr><tr><td class="mono">K-02</td><td><strong>电量异常或突然断电</strong></td><td>运动失控、任务中断</td><td>电量告警、功率保护与安全停止</td><td class="mono small">S05 / S07</td><td><span class="risk high">高</span></td></tr><tr><td class="mono">K-03</td><td><strong>通信中断或误命令</strong></td><td>人工监督失效</td><td>链路质量检测、身份认证、失联停机</td><td class="mono small">S04 / S07</td><td><span class="risk high">高</span></td></tr><tr><td class="mono">K-04</td><td><strong>感知误判与模型幻觉</strong></td><td>不合理移动决策与碰撞</td><td>置信度展示、受限动作、人工复核</td><td class="mono small">S02 / S03</td><td><span class="risk high">高</span></td></tr><tr><td class="mono">K-05</td><td><strong>任务模式越权</strong></td><td>出现未经批准的行为</td><td>人工授权、最小权限、操作日志与禁止机制</td><td class="mono small">S03 / S08</td><td><span class="risk high">高</span></td></tr><tr><td class="mono">K-06</td><td><strong>模型版本失控</strong></td><td>行为难以复现或评估</td><td>版本记录、离线回放及验证门槛</td><td class="mono small">S03 / S07</td><td><span class="risk mid">中</span></td></tr><tr><td class="mono">K-07</td><td><strong>高温、粉尘或供电不稳</strong></td><td>设备故障或电气风险</td><td>环境检查、散热、热保护与受控降级</td><td class="mono small">S05 / S06</td><td><span class="risk mid">中</span></td></tr><tr><td class="mono">K-08</td><td><strong>武装任务安全治理失败（概念）</strong></td><td>违反人类监督与责任边界</td><td>独立审查、人工终止、审计与合规评估</td><td class="mono small">S08 / S04 / S07</td><td><span class="risk high">高</span></td></tr></tbody>
+  </table></div>
+ </div>
+</section>
+
+ <section class="section" id="safety">
+ <div class="container">
+  <div class="section-kicker">09 / ETHICS &amp; SAFETY BOUNDARIES</div>
+  <div class="section-heading"><h2>武装属性不是<br>取消人工决策权的理由。</h2>
+   <p>课程方案只在抽象层级展示武装任务的授权、状态监督与安全治理；不会给出可操作的武器安装、火控、瞄准、识别攻击目标或自动攻击实施方案。</p></div>
+  <div class="guardrails">
+   <article class="card guardrail-primary">
+    <span class="eyebrow">HUMAN CONTROL / SAFETY FIRST</span>
+    <h3>具身智能负责感知与受限行动，<br>关键决策由人承担。</h3>
+    <p>本组将“武装四足无人作战机器人”作为复杂系统工程研究对象，但只对机器人平台、具身行为、安全监督、人工授权与任务治理作概念性建模。机器人本体不得自主决定对人员实施伤害。</p>
+    <ul class="guardrail-list">
+     <li>任务必须由人员授权，操作员可暂停、接管、撤销和终止</li>
+     <li>出现失联、低置信度、异常动作、过温等情况时优先停止</li>
+     <li>保留操作和模型版本记录，便于责任追溯</li>
+     <li>任何超出概念范围的武装能力均不在本作业中设计</li>
+    </ul>
+   </article>
+   <article class="card">
+    <span class="eyebrow">DESIGN ASSUMPTIONS</span>
+    <h3 style="margin:12px 0;font-size:1.14rem">设计假设与适用范围</h3>
+    <p>① V-01 为概念四足平台，武装能力不涉及制造或执行细节。<br>
+       ② 性能数字为设计目标，尚无实测。<br>
+       ③ 具身智能使用受控任务场景及仿真验证。<br>
+       ④ 任务边界、人工审核和日志审计优先于自主性扩展。</p>
+    <button class="btn btn-quiet" id="print-page" type="button">打印 / 导出 PDF ↗</button>
+   </article>
+  </div>
+ </div>
+</section>
+
+ <section class="section" id="references">
+ <div class="container">
+  <div class="section-kicker">10 / REFERENCES &amp; TEAM</div>
+  <div class="grid-2">
+   <div class="card">
+    <h3 style="font-size:1.35rem;margin-bottom:16px">参考方法与工程定位</h3>
+    <p>设计使用系统工程中的使命分析、层级分解、需求分配、接口管理和 V&amp;V 方法。具身智能相关结构为概念设计，武装任务仅涉及授权、安全监督和人工控制，不代表实体装备性能。</p>
+    <ol class="ref-list">
+     <li><a href="https://www.nasa.gov/reference/system-engineering-handbook-appendix/" target="_blank" rel="noopener noreferrer">NASA Systems Engineering Handbook — Appendix</a>（系统设计方法）</li>
+     <li><a href="https://swehb.nasa.gov/pages/viewpage.action?pageId=146540037" target="_blank" rel="noopener noreferrer">NASA Software Engineering Handbook — Requirements Decomposition</a>（需求分解与追溯）</li>
+     <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" target="_blank" rel="noopener noreferrer">GitHub Pages 官方部署文档</a>（网页发布）</li>
+    </ol>
+    <p style="font-size:.76rem;color:var(--soft);margin-top:18px">参考方法不代表相关组织对本案例的认可或实测确认。</p>
+   </div>
+   <div class="card">
+    <h3 style="font-size:1.35rem;margin-bottom:16px">具身智能组 · 作品信息</h3>
+    <p><strong style="color:var(--ink)">课程：</strong>复杂系统工程 · 小组作业 01<br>
+       <strong style="color:var(--ink)">小组：</strong>具身智能组<br>
+       <strong style="color:var(--ink)">课题：</strong>武装四足无人作战机器人的六级体系架构（概念设计）<br>
+       <strong style="color:var(--ink)">成员：</strong>Duan xy<br>
+       <strong style="color:var(--ink)">学号：</strong>15241604<br>
+       <strong style="color:var(--ink)">GitHub：</strong><a href="https://github.com/duanxy-666" target="_blank" rel="noopener noreferrer">duanxy-666</a><br>
+       <strong style="color:var(--ink)">其他成员：</strong>【如有请补充】<br>
+       <strong style="color:var(--ink)">提交截止：</strong>2026 年 11 月 11 日 12:00</p>
+    <p class="note" style="margin-top:12px">GitHub Pages 是互联网公开网页；姓名和学号会被看到。如果课程不要求公开学号，可在提交前删除这行。</p>
+   </div>
+  </div>
+ </div>
+</section>
+</main>
+<footer class="endcap">
+ <div class="container">
+  <span class="eyebrow">DESIGNED FOR COMPLEX SYSTEMS ENGINEERING</span>
+  <h2 style="margin:13px 0">让四足机器人拥有身体，<br>也拥有可解释的行动逻辑。</h2>
+  <p>Mission → SoS → Vehicles → Systems → Subsystems → Modules。以具身智能的感知、规划、执行、反馈为核心，将武装任务的人工授权、安全监督与责任治理纳入系统边界。</p>
+  <div class="footer-minor"><span>© 2026 具身智能组 / Duan xy 15241604 · Q-01 CONCEPT</span><span>单文件离线网页 · 纯 HTML / CSS / JavaScript</span><a href="#home">↑ 返回顶部</a></div>
+ </div>
+</footer>
+<script>
+const tierInfo = {
+ "mission": [
+  "M-00 / PURPOSE",
+  "任务 Mission",
+  "使命是高风险区域的具身感知、四足机动、人工协同警戒，以及武装任务状态的安全治理；任务层解释为什么需要该平台。",
+  "回答：任务为什么存在，如何判断成败？"
+ ],
+ "sos": [
+  "A-00 / SYSTEM OF SYSTEMS",
+  "体系 SoS",
+  "人类指挥与授权、Q-01 四足机器人、协同通信、态势系统、保障与安全监督共同构成多主体协同体系。",
+  "回答：哪些独立要素必须一起协作？"
+ ],
+ "vehicle": [
+  "V-01 / MAIN PLATFORM",
+  "整机 Vehicles",
+  "具身智能组的核心整机为“哨界 Q-01 武装四足无人作战机器人（概念）”。本作业展开机器人底盘与感知/决策/安全架构。",
+  "回答：由什么物理平台承担这些功能？"
+ ],
+ "system": [
+  "S01–S08 / SYSTEMS",
+  "系统 Systems",
+  "核心划分为机动、感知、具身智能决策、人机协同、能源、结构、安全，以及武装任务授权与安全约束八大系统。",
+  "回答：整机内部如何按功能分工？"
+ ],
+ "subsystem": [
+  "SSxx.x / SUBSYSTEMS",
+  "子系统 Subsystems",
+  "每个系统再拆成三个子系统，24 个子系统具有独立职责、编号与接口关系。",
+  "回答：系统内部有哪些可管理的功能单元？"
+ ],
+ "module": [
+  "SSxx.x.y / MODULES",
+  "模块 Modules",
+  "每个子系统拆成四个具体软硬件模块，96 个模块对应传感、运动、软件、数据、安全等实现元素。",
+  "回答：每项功能由什么具体单元承担？"
+ ]
+};
+function selectTier(id) {
+  const d=tierInfo[id]; if(!d)return;
+  document.querySelectorAll("[data-tier]").forEach(b=>{const on=b.dataset.tier===id;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on));});
+  const x=document.getElementById("tier-detail");
+  x.innerHTML='<div><span class="pill-id mono">'+d[0]+'</span><h3>'+d[1]+'</h3><p>'+d[2]+'</p></div><small>'+d[3]+'</small>';
+}
+document.querySelectorAll("[data-tier]").forEach(b=>b.addEventListener("click",()=>selectTier(b.dataset.tier)));
+selectTier("vehicle");
+
+const searchInput=document.getElementById("system-search");
+function filterSystems(){
+ const q=searchInput.value.trim().toLocaleLowerCase();
+ let visible=0;
+ document.querySelectorAll(".sys-card").forEach(el=>{
+   const match=el.dataset.search.includes(q);
+   el.hidden=!match;
+   if(match)visible++;
+ });
+ document.getElementById("system-count").textContent=`显示 ${visible} / 8 个系统`;
+ document.getElementById("no-results").hidden=visible!==0;
+}
+searchInput.addEventListener("input",filterSystems);
+filterSystems();
+
+let allExpanded=false;
+document.getElementById("expand-all").addEventListener("click",e=>{
+ allExpanded=!allExpanded;
+ document.querySelectorAll(".sys-details").forEach(d=>d.open=allExpanded);
+ e.currentTarget.textContent=allExpanded?"全部收起":"全部展开";
+});
+document.getElementById("print-page").addEventListener("click",()=>window.print());
+document.getElementById("copy-chain").addEventListener("click",async e=>{
+ const text="任务 Mission → 体系 SoS → 整机 Vehicles → 系统 Systems → 子系统 Subsystems → 模块 Modules\n本组案例：多模态场景理解 M-03 → 态势汇聚与模型评估 A-05 → 哨界 Q-01 具身智能四足机器人 V-01 → 多模态感知与场景理解系统 S02 → 具身语义场景理解 SS02.3 → 观测可信度评估器 SS02.3.3 → R-08 / T-08";
+ const button=e.currentTarget,prev=button.textContent;
+ try {
+   if(navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+   else {
+     let t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();
+     const ok=document.execCommand("copy");t.remove();if(!ok) throw new Error("copy unavailable");
+   }
+   button.textContent="✓ 已复制六级链路";
+ } catch(err) {
+   button.textContent="复制失败，请手动选择";
+ }
+ setTimeout(()=>button.textContent=prev,2200);
+});
+</script>
+</body>
+</html>
