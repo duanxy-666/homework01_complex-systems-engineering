@@ -10,7 +10,7 @@ GitHub：duanxy-666
 ## 网站文件
 - `index.html`：完整设计。
 - `README.md`：项目说明。
-- `README.md`：CATIA文件。
+- `CAD`：step文件。
 
 ## 使用方式
 浏览器打开 `index.html` 即可查看；
