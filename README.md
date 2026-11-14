@@ -13,6 +13,4 @@ GitHub：duanxy-666
 - `CAD`：step文件。
 
 ## 使用方式
-浏览器打开 `index.html` 即可查看；
-
-
+浏览器打开 `index.html` 即可查看；三维模型使用了Git LFS技术，需导入CAD/CATIAsw查看。
