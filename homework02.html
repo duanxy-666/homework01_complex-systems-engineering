@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="复杂系统工程小组作业2：四足轮腿式无人作战机器人（V01/U01）业务／任务需求BRS、运营概念ConOps、运行概念OpsCon及相关方需求StRS。">
+<title>小组作业2 · BRS &amp; StRS | 具身智能组</title>
+<style>
+:root{--bg:#081018;--panel:#0e1822;--panel2:#142331;--panel3:#192b3b;--line:rgba(224,240,255,.13);--text:#eef5fb;--text2:#cad8e5;--muted:#90a5b8;--accent:#ff7a3d;--accent2:#ffb36a;--cyan:#65dcff;--cyan2:#2699ff;--green:#84e3bd;--shadow:0 20px 55px rgba(0,0,0,.30);--max:1240px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{margin:0;background:radial-gradient(ellipse 800px 500px at 1% -2%,rgba(255,122,61,.11),transparent),radial-gradient(ellipse 980px 680px at 100% 2%,rgba(38,153,255,.12),transparent),linear-gradient(160deg,#071018,#0b1520 53%,#081018);color:var(--text);font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.73;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:linear-gradient(90deg,#fff 1px,transparent 1px),linear-gradient(#fff 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(180deg,black,transparent 87%);z-index:-1}
+a{color:inherit;text-decoration:none}button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:default}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}
+.container{width:min(var(--max),calc(100% - 46px));margin-inline:auto}
+.skip-link{position:absolute;top:-100px;left:20px;padding:12px 20px;background:var(--accent);color:#13151b;z-index:100}
+.skip-link:focus{top:20px}
+.topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(22px);background:rgba(7,15,23,.89);border-bottom:1px solid var(--line)}
+.topbar-inner{min-height:76px;display:flex;align-items:center;gap:26px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;min-width:203px}
+.brand-mark{display:grid;place-items:center;width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0e1923;font-weight:900;border-radius:12px;box-shadow:0 7px 30px rgba(255,122,61,.25)}
+.brand b{display:block;line-height:1.2;font-size:.97rem}.brand small{display:block;color:var(--muted);font-size:.71rem;letter-spacing:.07em}
+.navlinks{display:flex;align-items:center;gap:23px;font-size:.86rem;font-weight:600}
+.navlinks a{color:#c2d3e2;white-space:nowrap;transition:color .2s}.navlinks a:hover{color:var(--accent2)}
+.navlinks .nav-back{padding:9px 14px;border:1px solid rgba(255,255,255,.17);border-radius:12px;color:#fff}
+.menu-button{display:none;background:transparent;color:#fff;border:1px solid var(--line);padding:8px 13px;border-radius:10px}
+.hero{padding:85px 0 50px}
+.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center}
+.eyebrow{color:var(--accent2);text-transform:uppercase;letter-spacing:.18em;font-size:.75rem;font-weight:800}
+.eyebrow-line{display:inline-flex;gap:10px;align-items:center;border:1px solid rgba(101,220,255,.24);color:#b2eaff;background:rgba(101,220,255,.065);padding:8px 14px;border-radius:100px;font-size:.75rem;font-weight:800;letter-spacing:.12em}
+.eyebrow-line::before{content:"";width:7px;height:7px;background:var(--cyan);border-radius:50%;box-shadow:0 0 12px var(--cyan)}
+.hero h1{font-size:clamp(3rem,5.2vw,5.65rem);letter-spacing:-.065em;line-height:1.08;margin:25px 0 19px;font-weight:900}
+.gradient-text{background:linear-gradient(95deg,#ffb777,#ff7c4e);background-clip:text;color:transparent}
+.hero-lead{font-size:1.08rem;line-height:1.9;max-width:680px;color:var(--text2);margin:0}
+.hero-sub{font-size:.89rem;color:var(--muted);margin-top:12px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}
+.btn{border-radius:14px;display:inline-flex;justify-content:center;align-items:center;gap:9px;padding:12px 20px;font-weight:800;font-size:.9rem;transition:transform .2s,filter .2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn-primary{background:linear-gradient(120deg,var(--accent),#ee985e);color:#10161b;border:0;box-shadow:0 12px 28px rgba(255,122,61,.24)}
+.btn-ghost{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#ecf5fc}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:30px}
+.meta span{font-size:.78rem;padding:7px 12px;border:1px solid var(--line);border-radius:999px;color:#c4d5e5;background:rgba(255,255,255,.02)}
+.visual-shell{background:linear-gradient(155deg,#122231,#0a151f 70%);border:1px solid rgba(101,220,255,.15);border-radius:28px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.visual-shell::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(38,153,255,.17),transparent 45%);pointer-events:none}
+.visual-top{display:flex;gap:7px;align-items:center;font-family:ui-monospace,monospace;color:#91aabc;font-size:.72rem;letter-spacing:.1em;position:relative;z-index:2}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}.dot:nth-child(2){background:var(--accent2)}.dot:nth-child(3){background:var(--green)}
+.visual-top span:last-child{margin-left:auto}
+.visual-shell svg{width:100%;height:auto;display:block;position:relative;z-index:1}
+.visual-bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:.74rem;color:#b6d9e7;border-top:1px solid var(--line);padding-top:13px}
+.visual-bottom b{color:var(--green);font-size:.8rem}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:60px}
+.metric{padding:23px 24px;background:linear-gradient(150deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:20px}
+.metric b{font-size:2.55rem;line-height:1;font-weight:900;letter-spacing:-.05em}.metric b span{color:var(--accent2)}
+.metric p{font-size:.87rem;color:var(--muted);margin:10px 0 0}
+.metric small{font-size:.7rem;color:#b1c9dc}
+.jump-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:22px}
+.jump-card{background:linear-gradient(170deg,#142331,#0e1a25);border:1px solid var(--line);border-radius:17px;padding:21px 15px;min-height:143px;transition:transform .2s,border-color .2s}
+.jump-card:hover{transform:translateY(-4px);border-color:rgba(255,179,106,.55)}
+.jump-card .number{color:var(--accent2);font-size:.76rem;font-weight:900;letter-spacing:.13em}
+.jump-card h3{margin:9px 0 3px;font-size:1.12rem}.jump-card p{color:var(--muted);font-size:.77rem;margin:0;line-height:1.5}
+.chapter{padding:90px 0 8px}
+.section-title{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:27px}
+.section-title h2{font-size:clamp(2rem,3.8vw,3.4rem);letter-spacing:-.045em;line-height:1.12;margin:11px 0 0}
+.section-title p{color:var(--text2);margin:0;max-width:505px;font-size:.96rem}
+.panel{border:1px solid var(--line);border-radius:25px;background:linear-gradient(150deg,rgba(255,255,255,.038),rgba(255,255,255,.014));padding:26px;box-shadow:0 14px 45px rgba(0,0,0,.13)}
+.panel h3{font-size:1.23rem;margin:0 0 15px}.panel p{color:var(--text2);margin:9px 0}
+.panel h4{font-size:1rem;margin:0 0 9px}.panel + .panel{margin-top:18px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.label{font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;font-weight:900;color:var(--cyan)}
+.body-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.body-list li{position:relative;padding-left:21px;color:var(--text2)}
+.body-list li::before{content:"";width:7px;height:7px;border-radius:2px;transform:rotate(45deg);background:var(--accent);position:absolute;left:0;top:.72em}
+.inline-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.inline-tags span{border-radius:999px;border:1px solid rgba(101,220,255,.2);padding:6px 10px;font-size:.77rem;color:#bee5f7;background:rgba(101,220,255,.045)}
+.notice{border-left:3px solid var(--accent);background:rgba(255,122,61,.058);padding:14px 17px;border-radius:0 12px 12px 0;color:#f7d8c1;font-size:.85rem;margin-top:21px}
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.scope-box{padding:22px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+.scope-box b{display:block;margin-bottom:9px}.scope-box.in b{color:var(--green)}.scope-box.out b{color:#ffb494}
+.scope-box p{font-size:.86rem;margin:0;color:var(--text2)}
+.system-line{display:grid;grid-template-columns:1fr 46px 1.1fr 46px 1fr;gap:5px;align-items:center;margin-top:19px}
+.system-node{border:1px solid var(--line);background:var(--panel);text-align:center;border-radius:16px;padding:17px 10px;min-height:114px;display:flex;flex-direction:column;justify-content:center}
+.system-node strong{font-size:.94rem}.system-node small{font-size:.73rem;color:var(--muted);line-height:1.5;margin-top:5px}
+.system-node.core{background:linear-gradient(145deg,#252d36,#1b2832);border-color:rgba(255,122,61,.45)}.system-arrow{text-align:center;color:var(--accent2);font-size:1.7rem}
+.table-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:.88rem}
+th,td{padding:15px 17px;vertical-align:top;border-bottom:1px solid var(--line)}
+th{white-space:nowrap;background:#192837;color:#e7f2fa;font-size:.79rem;letter-spacing:.045em}
+tbody tr{background:rgba(10,21,31,.44)}tbody tr:nth-child(even){background:rgba(23,39,53,.5)}tbody tr:hover{background:rgba(45,75,93,.24)}
+tbody tr:last-child td{border-bottom:none}
+td{color:#d1e0e9}td:first-child{font-weight:650}
+.cell-title{display:block;margin-top:6px;min-width:148px;color:#f0f7fa;font-size:.88rem}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.77rem;letter-spacing:.01em}
+.accent{color:var(--accent2)}.muted{color:var(--muted)}
+.subheading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:26px 0 15px}
+.subheading h3{font-size:1.22rem;margin:0}.subheading small{color:var(--muted);font-size:.78rem}
+.requirement-band{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 0}
+.pill{display:inline-flex;gap:7px;padding:9px 13px;border:1px solid var(--line);border-radius:100px;background:rgba(255,255,255,.035);color:#d2e3eb;font-size:.81rem}
+.milestones{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.milestone{padding:21px 17px;background:#101e2b;border:1px solid var(--line);border-radius:17px;position:relative}
+.milestone:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:44px;color:var(--accent2);font-weight:900;z-index:2}
+.milestone b{font-size:.78rem;color:var(--accent2)}.milestone h4{margin:6px 0 6px}.milestone p{font-size:.81rem;color:var(--text2);margin:0;line-height:1.63}
+.scenario{margin-top:19px;padding:24px 26px;border:1px solid rgba(255,122,61,.24);border-radius:21px;background:linear-gradient(100deg,rgba(255,122,61,.095),rgba(255,122,61,.015))}
+.scenario h3{margin:0 0 8px}.scenario p{margin:0;color:var(--text2)}
+.conops-card{padding:25px;border:1px solid var(--line);border-radius:19px;background:var(--panel)}
+.conops-card b{display:inline-block;color:var(--cyan);font-size:.76rem;letter-spacing:.13em;margin-bottom:7px}
+.conops-card h3{font-size:1.05rem;margin:0 0 8px}.conops-card p{font-size:.87rem;color:var(--text2);margin:0}
+.state-buttons{display:grid;grid-template-columns:repeat(7,1fr);gap:9px;margin:20px 0 17px}
+.state-button{background:var(--panel);color:var(--text2);border:1px solid var(--line);padding:12px 6px;border-radius:13px;font-size:.75rem;line-height:1.5;transition:.2s}
+.state-button strong{display:block;color:var(--muted);font-size:.73rem}
+.state-button.is-active{background:rgba(255,122,61,.15);border-color:var(--accent);color:#fff;box-shadow:0 0 0 1px rgba(255,122,61,.12)}
+.state-button.is-active strong{color:var(--accent2)}
+.state-detail{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:24px;background:linear-gradient(100deg,#172939,#101d29);border:1px solid rgba(101,220,255,.2);border-radius:18px;min-height:126px}
+.state-detail h3{margin:0 0 6px}.state-detail p{margin:0;color:#ccdce7;font-size:.88rem}
+.state-detail .state-badge{border-radius:999px;border:1px solid rgba(132,227,189,.34);padding:8px 13px;color:var(--green);white-space:nowrap;font-size:.8rem}
+.importance{color:var(--cyan);font-size:.82rem}
+.req-toolbar{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:15px}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filter-button{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:999px;color:#bdd2e1;font-size:.77rem;font-weight:650;padding:8px 12px}
+.filter-button.is-active{background:var(--accent);color:#17202a;border-color:var(--accent)}
+.search-field{border:1px solid var(--line);border-radius:13px;min-width:220px;padding:10px 14px;background:#0c1925;color:var(--text);font-size:.85rem}
+.search-field::placeholder{color:#8298a9}
+.category-tag{display:block;color:#91b7c9;font-size:.73rem;margin-top:6px;font-weight:450}
+.id-chip{display:inline-block;border:1px solid rgba(101,220,255,.18);border-radius:6px;color:#b5e5f6;padding:2px 6px;font:700 .7rem ui-monospace,Consolas,monospace;margin:2px 2px 2px 0}
+.id-chip:hover{background:rgba(101,220,255,.13)}
+.req-description{min-width:275px;line-height:1.8;color:#edf4fa}
+.priority{display:inline-block;border-radius:7px;padding:4px 8px;background:rgba(101,220,255,.10);color:#a5eaff;font-size:.78rem;font-weight:850}
+.priority-critical{background:rgba(255,122,61,.13);color:#ffb58d}
+.table-foot{color:var(--muted);font-size:.78rem;margin-top:13px}
+.no-results{padding:23px;color:var(--muted);text-align:center;border:1px dashed var(--line);border-radius:12px;margin-top:15px}
+.tips-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.tip{padding:19px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.023)}
+.tip h4{margin:0 0 7px;font-size:.96rem}.tip p{margin:0;color:var(--text2);font-size:.85rem}
+.tip .tip-no{color:var(--accent2);font-weight:900;margin-right:8px}
+.footer{border-top:1px solid var(--line);margin-top:105px;padding:48px 0 36px}
+.footer-grid{display:flex;justify-content:space-between;gap:20px;align-items:start}
+.footer h2{font-size:1.45rem;margin:0 0 8px}.footer p{font-size:.85rem;color:var(--muted);max-width:750px;margin:5px 0}
+.footer-links{display:flex;gap:13px;flex-wrap:wrap}.footer-links a{font-size:.83rem;color:#d3eaf5;border-bottom:1px solid rgba(101,220,255,.4)}
+.copy-note{font-size:.76rem;color:var(--muted);margin-top:23px;border-top:1px solid var(--line);padding-top:19px}
+.reveal{transition:opacity .6s ease,transform .6s ease}
+.js .reveal{opacity:0;transform:translateY(12px)}.js .reveal.visible{opacity:1;transform:none}
+@media(max-width:1120px){.hero-grid{grid-template-columns:1fr 1fr;gap:25px}.navlinks{gap:12px}.navlinks a{font-size:.81rem}.section-title{display:block}.section-title p{max-width:720px;margin-top:14px}.metrics{margin-top:44px}.jump-grid{grid-template-columns:repeat(3,1fr)}.milestones{grid-template-columns:repeat(3,1fr)}.milestone::after{display:none}}
+@media(max-width:840px){.hero-grid,.two-col{grid-template-columns:1fr}.hero{padding-top:45px}.hero h1{font-size:clamp(2.75rem,10vw,4.8rem)}.visual-shell{max-width:660px}.three-col{grid-template-columns:1fr 1fr}.state-buttons{grid-template-columns:repeat(4,1fr)}.menu-button{display:block}.navlinks{display:none;position:absolute;top:75px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:12px 24px 22px;background:rgba(7,15,23,.98);border-bottom:1px solid var(--line)}.navlinks.open{display:flex}.navlinks a{padding:10px 6px}.navlinks .nav-back{margin-top:10px}.system-line{grid-template-columns:1fr}.system-arrow{transform:rotate(90deg)}}
+@media(max-width:600px){.container{width:min(var(--max),calc(100% - 32px))}.topbar-inner{min-height:68px}.navlinks{top:68px}.hero{padding-top:30px}.metrics{grid-template-columns:repeat(2,1fr)}.metric{padding:20px}.jump-grid{grid-template-columns:repeat(2,1fr)}.jump-card{min-height:132px}.chapter{padding-top:67px}.section-title h2{font-size:2.35rem}.panel{padding:18px}.scope{grid-template-columns:1fr}.milestones,.three-col{grid-template-columns:1fr}.state-buttons{grid-template-columns:repeat(2,1fr)}.state-detail{grid-template-columns:1fr}.req-toolbar{align-items:stretch}.search-field{width:100%}.footer-grid{display:block}.footer-links{margin-top:20px}.visual-bottom{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}.js .reveal{opacity:1;transform:none}}
+@media print{*{box-shadow:none!important}.topbar,.hero-actions,.req-toolbar,.state-buttons,.menu-button,.skip-link{display:none!important}.hero{padding:15px 0}.hero-grid{display:block}.visual-shell{display:none}.metrics,.jump-grid,.two-col,.three-col{gap:10px}.chapter{padding:22px 0}.section-title h2{font-size:23px}.panel,.metric,.conops-card,.tip{break-inside:avoid;border-color:#888}body{background:white;color:#111;font-size:10pt}p,.panel p,.scope-box p,.body-list li,.table-foot,.tip p,.footer p,.conops-card p{color:#333}th{background:#eee;color:#222}td,.req-description{color:#222}tbody tr,tbody tr:nth-child(even){background:white}.state-detail{background:#eee;color:#222}.state-detail p{color:#333}.brand small,.meta span{color:#333}.gradient-text{color:#b44;background:none}.eyebrow,.accent{color:#ad4c22}.chapter,.panel,table,tbody,tr{break-inside:auto}.table-wrap{overflow:visible}.reveal,.js .reveal{opacity:1!important;transform:none!important}a{color:inherit}.footer{margin-top:20px}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳转至主要内容</a>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="#top" aria-label="返回本页顶部">
+      <span class="brand-mark">02</span>
+      <span><b>具身智能组 · 复杂系统工程</b><small>GROUP ASSIGNMENT / 02</small></span>
+    </a>
+    <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="navLinks" type="button">☰ 菜单</button>
+    <nav class="navlinks" id="navLinks" aria-label="页面目录">
+      <a href="#scope">项目范围</a><a href="#brs">BRS</a><a href="#conops">ConOps</a><a href="#opscon">OpsCon</a>
+      <a href="#stakeholders">相关方</a><a href="#strs">StRS</a><a href="#trace">追溯</a>
+      <a class="nav-back" href="index.html">← 返回作业一</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<section class="hero" id="top">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow-line">SYSTEMS ENGINEERING · CONCEPT DEFINITION</div>
+        <h1>从任务使命<br>走向 <span class="gradient-text">BRS / StRS</span></h1>
+        <p class="hero-lead">面向<strong>四足轮腿式无人作战机器人（U01 / V01）</strong>，衔接“任务 → 体系 → 整机 → 系统”的首次作业架构，完成业务／任务需求、运营概念、运行概念及相关方需求定义。</p>
+        <p class="hero-sub">系统背景：异构无人作战具身智能集群 · 本页聚焦安全可控的环境感知、协同、保障与验证。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#brs">查看业务需求 ↗</a>
+          <a class="btn btn-ghost" href="#strs">查看相关方需求 ↗</a>
+          <button class="btn btn-ghost" onclick="window.print()" type="button">打印／保存为 PDF</button>
+        </div>
+        <div class="meta"><span>具身智能组</span><span>Duan xy · 15241604</span><span>作业二 / 2026.11.18</span><span>文档状态：概念定义草案</span></div>
+      </div>
+      <div class="visual-shell" aria-label="轮腿式机器人与异构协同节点示意图">
+        <div class="visual-top"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>SYS / V01 · CONCEPT</span></div>
+        <svg viewBox="0 0 640 430" role="img" aria-labelledby="graphTitle graphDesc">
+          <title id="graphTitle">轮腿式机器人系统和相关节点概念连接图</title>
+          <desc id="graphDesc">中央为V01四足轮腿式机器人，连接远程操作、空中观察和后方保障节点。图为概念性示意而非实装结构图。</desc>
+          <defs><linearGradient id="bodyG" x1="0" x2="1"><stop stop-color="#334b5b"/><stop offset="1" stop-color="#213240"/></linearGradient>
+          <linearGradient id="wheelG" x1="0" x2="1"><stop stop-color="#15222c"/><stop offset="1" stop-color="#314f60"/></linearGradient>
+          <pattern id="mesh" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80a5bc" stroke-opacity=".11" stroke-width="1"/></pattern>
+          </defs>
+          <rect x="6" y="13" width="628" height="389" rx="15" fill="url(#mesh)"/>
+          <ellipse cx="319" cy="344" rx="190" ry="24" fill="#65dcff" opacity=".07"/>
+          <circle cx="319" cy="202" r="157" stroke="#65dcff" stroke-opacity=".13" stroke-width="1.5" fill="none"/>
+          <circle cx="319" cy="202" r="116" stroke="#ff7a3d" stroke-opacity=".18" stroke-dasharray="6 9" fill="none"/>
+          <g stroke="#65dcff" stroke-width="2" stroke-dasharray="5 9" fill="none" opacity=".7">
+            <path d="M202 153 L130 94"/><path d="M445 157 L522 90"/><path d="M443 284 L521 340"/><path d="M197 289 L105 341"/>
+          </g>
+          <g fill="#112634" stroke="#6bdfff" stroke-opacity=".6" stroke-width="1.5">
+            <rect x="36" y="54" width="148" height="60" rx="13"/><rect x="473" y="52" width="148" height="60" rx="13"/>
+            <rect x="467" y="320" width="158" height="60" rx="13"/><rect x="20" y="323" width="160" height="60" rx="13"/>
+          </g>
+          <g fill="#cbe9f6" font-family="sans-serif" text-anchor="middle">
+            <text x="110" y="79" font-size="13" font-weight="700">OPERATOR</text><text x="110" y="98" font-size="11" opacity=".7">Human Control</text>
+            <text x="547" y="77" font-size="13" font-weight="700">AIR NODE</text><text x="547" y="96" font-size="11" opacity=".7">Observation</text>
+            <text x="545" y="345" font-size="13" font-weight="700">SUPPORT</text><text x="545" y="364" font-size="11" opacity=".7">Maintenance</text>
+            <text x="100" y="348" font-size="13" font-weight="700">DATA</text><text x="100" y="366" font-size="11" opacity=".7">Audit Trail</text>
+          </g>
+          <g fill="#ffb36a"><circle cx="202" cy="153" r="4"/><circle cx="445" cy="157" r="4"/><circle cx="443" cy="284" r="4"/><circle cx="197" cy="289" r="4"/></g>
+          <!-- Concept-only wheel-legged robot silhouette: body, layered armor, sensors and articulated wheel assemblies. -->
+          <g stroke="#0b1721" stroke-width="3" stroke-linejoin="round">
+            <path d="M235 219 L220 252 L212 291" stroke="#59798b" stroke-width="19" fill="none" stroke-linecap="round"/>
+            <path d="M397 220 L414 249 L431 292" stroke="#59798b" stroke-width="19" fill="none" stroke-linecap="round"/>
+            <path d="M262 214 L249 267 L230 314" stroke="#405d6e" stroke-width="18" fill="none" stroke-linecap="round"/>
+            <path d="M374 214 L384 266 L404 314" stroke="#405d6e" stroke-width="18" fill="none" stroke-linecap="round"/>
+            <g fill="url(#wheelG)" stroke="#80a6b9">
+              <circle cx="210" cy="307" r="29"/><circle cx="430" cy="307" r="29"/><circle cx="230" cy="330" r="31"/><circle cx="404" cy="330" r="31"/>
+            </g>
+            <g fill="#172833" stroke="#78a0b5" stroke-width="2"><circle cx="210" cy="307" r="13"/><circle cx="430" cy="307" r="13"/><circle cx="230" cy="330" r="14"/><circle cx="404" cy="330" r="14"/></g>
+            <path d="M232 169 L395 169 Q409 172 410 190 L399 234 Q395 241 375 242 L245 242 Q232 236 228 221 L223 190 Q222 173 232 169Z" fill="url(#bodyG)" stroke="#8fb2c2"/>
+            <path d="M247 175 H388 L397 203 H235Z" fill="#405b6b" stroke="#7198a7" stroke-width="1.5"/>
+            <path d="M247 206 H382 L373 230 H256Z" fill="#263f50" stroke="#547487" stroke-width="1.5"/>
+            <path d="M285 164 L287 148 H354 L358 164Z" fill="#344a56" stroke="#7699aa"/>
+            <path d="M299 148 V137 H342 V148" fill="none" stroke="#ff995c" stroke-width="5"/>
+            <path d="M218 180 L207 185 L202 210 L224 211Z" fill="#293f4e" stroke="#8fb2c2"/>
+            <path d="M406 181 L423 188 L425 211 L403 214Z" fill="#293f4e" stroke="#8fb2c2"/>
+            <g fill="#62daff" stroke="none"><circle cx="218" cy="190" r="3"/><circle cx="218" cy="202" r="3"/><circle cx="416" cy="192" r="3"/><circle cx="416" cy="204" r="3"/></g>
+            <path d="M271 233 H367" stroke="#ff9c63" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <g fill="#dff5fa" font-family="sans-serif" text-anchor="middle"><text x="320" y="192" font-size="17" font-weight="800" letter-spacing="3">V01 / U01</text><text x="320" y="218" font-size="11" letter-spacing="1.6" fill="#83dfff">WHEEL-LEGGED SYSTEM</text></g>
+          <path d="M212 355 H426" stroke="#83a7bb" stroke-opacity=".28" stroke-width="2"/>
+          <text x="318" y="388" font-family="monospace" fill="#9cc2d2" text-anchor="middle" font-size="11" letter-spacing="3">HUMAN-IN-CONTROL · SAFE BY DESIGN</text>
+        </svg>
+        <div class="visual-bottom"><span>Mission → SoS → Vehicles → Systems</span><b>● CONCEPT BASELINE</b></div>
+      </div>
+    </div>
+    <div class="metrics" aria-label="页面成果统计">
+      <div class="metric"><b>09<span>.</span></b><p>业务／任务需求</p><small>BRS statements</small></div>
+      <div class="metric"><b>10<span>.</span></b><p>相关方角色</p><small>Stakeholder groups</small></div>
+      <div class="metric"><b>22<span>.</span></b><p>相关方需求条目</p><small>StRS requirements</small></div>
+      <div class="metric"><b>07<span>.</span></b><p>运行状态与流程</p><small>Operating states</small></div>
+    </div>
+    <div class="jump-grid" aria-label="五项重点交付">
+      <a class="jump-card" href="#brs"><div class="number">01 / MISSION</div><h3>业务／任务需求</h3><p>为何建设、提供什么价值</p></a>
+      <a class="jump-card" href="#conops"><div class="number">02 / CONOPS</div><h3>运营概念</h3><p>谁在什么场景下使用</p></a>
+      <a class="jump-card" href="#opscon"><div class="number">03 / OPSCON</div><h3>运行概念</h3><p>系统按什么流程运行</p></a>
+      <a class="jump-card" href="#stakeholders"><div class="number">04 / ACTORS</div><h3>相关方列表</h3><p>谁提出要求、谁受影响</p></a>
+      <a class="jump-card" href="#strs"><div class="number">05 / NEEDS</div><h3>相关方需求</h3><p>可追溯、可验证的条目</p></a>
+    </div>
+  </div>
+</section>
+<section class="chapter" id="scope">
+  <div class="container">
+    <div class="section-title"><div><div class="eyebrow">00 / System baseline</div><h2>任务对象与系统边界</h2></div><p>继承第一次作业已有的“异构集群—核心节点—八大系统”关系，在概念定义阶段明确分析对象，避免将体系目标与单机技术指标混淆。</p></div>
+    <div class="two-col">
+      <article class="panel reveal"><div class="label">Selected system / 选定系统</div><h3>U01 / V01 · 四足轮腿式机器狗</h3>
+        <p>它是异构具身智能集群中的地面前沿核心节点：具备多源环境感知、轮腿融合机动、任务载荷接口、异构节点互联、远程操作和人类授权控制等概念能力。</p>
+        <div class="inline-tags"><span>S01 感知</span><span>S02 认知决策</span><span>S03 轮腿机动</span><span>S04 任务载荷</span><span>S05 协同通信</span><span>S06 生存保障</span><span>S07 安全控制</span><span>S08 学习演化</span></div>
+      </article>
+      <article class="panel reveal"><div class="label">Mission statement / 任务陈述</div><h3>高危环境先行感知与安全协作</h3>
+        <p>在人员不宜直接进入的复杂现场，为授权操作人员提供可追溯的环境观察信息、远程机动能力、与外部节点的受控信息交换，以及异常情况下的安全处置手段。</p>
+        <div class="notice"><b>范围说明：</b>本次分析聚焦系统工程概念与安全治理；不包含自主攻击、目标打击、武器控制或具体战术部署方案。</div>
+      </article>
+    </div>
+    <div class="scope">
+      <div class="scope-box in"><b>IN SCOPE / 本次纳入</b><p>任务场景、业务目标、用户角色、环境信息流程、平台运行状态、人工控制、协作接口、维护保障、验证与追溯。</p></div>
+      <div class="scope-box out"><b>OUT OF SCOPE / 本次不展开</b><p>详细机械图纸、控制律与运动学参数、实际部署战术、武器载荷方案、未验证的量化性能承诺。</p></div>
+    </div>
+    <div class="panel" style="margin-top:18px">
+      <div class="label">Context boundary / 系统上下文</div>
+      <div class="system-line" aria-label="系统上下文示意：用户与任务管理端、轮腿式机器人、异构节点和保障">
+        <div class="system-node"><strong>人类操作／管理端</strong><small>任务授权、远程控制、复核信息</small></div><div class="system-arrow">⇄</div>
+        <div class="system-node core"><strong>U01 / V01 机器人系统</strong><small>感知 · 机动 · 通信 · 安全 · 保障</small></div><div class="system-arrow">⇄</div>
+        <div class="system-node"><strong>异构节点与保障端</strong><small>外部观察、数据互通、回收维护</small></div>
+      </div>
+      <p class="table-foot">说明：双向箭头表示受控的信息／指令交互关系，并不意味着外部节点可直接获得本机最高控制权限。</p>
+    </div>
+  </div>
+</section>
+<section class="chapter" id="brs">
+  <div class="container">
+    <div class="section-title"><div><div class="eyebrow">01 / Business requirements specification</div><h2>BRS · 业务／任务需求</h2></div><p>从任务动因、业务价值、期望结果与成功判据四个角度展开，回答“为什么需要该系统”，不提前等同于具体技术实现。</p></div>
+    <div class="three-col">
+      <article class="panel reveal"><div class="label">Driver 01</div><h3>人员风险</h3><p>危险、遮挡、废墟和通信不稳定场景下，应减少人员在信息不足时直接进入现场。</p></article>
+      <article class="panel reveal"><div class="label">Driver 02</div><h3>信息协同</h3><p>多节点产生的信息需要来源标识、统一呈现和人工复核，避免将不确定推断当作事实。</p></article>
+      <article class="panel reveal"><div class="label">Driver 03</div><h3>系统韧性</h3><p>任务平台必须具备异常退化、维护更换、日志审计与任务后复盘的闭环能力。</p></article>
+    </div>
+    <div class="subheading"><h3>01.1 · BRS 主需求清单</h3><small>9 项业务需求 · 概念基线 v1.0</small></div>
+    <div class="table-wrap">
+      <table aria-label="业务任务需求BRS表">
+        <thead><tr><th>编号 / 业务目标</th><th>需求动因</th><th>业务／任务期望</th><th>建议成功判据</th><th>作业一关联</th></tr></thead>
+        <tbody>
+          <tr id="brs-01"><td><span class="mono accent">BRS-01</span><strong class="cell-title">降低高风险现场人员暴露</strong></td><td>高风险环境先行探察</td><td>让无人平台先于人员获取现场基本信息，减少不必要的直接暴露。</td><td>可在指定演示场景完成远程先行观察，并提交记录。</td><td><span class="mono muted">M01 · S01</span></td></tr>
+<tr id="brs-02"><td><span class="mono accent">BRS-02</span><strong class="cell-title">形成可信的环境信息服务</strong></td><td>信息缺口与判断滞后</td><td>向任务管理方提供带时间、来源和确认状态的环境信息。</td><td>信息可检索、追溯，并能标记待人工核实的内容。</td><td><span class="mono muted">M01 / M02 · S01 / S02</span></td></tr>
+<tr id="brs-03"><td><span class="mono accent">BRS-03</span><strong class="cell-title">适应混合地面环境</strong></td><td>平地效率与非结构化地形适应性矛盾</td><td>充分发挥轮腿融合平台的可通行性与稳定性。</td><td>按预设障碍和地面类型执行安全演示试验。</td><td><span class="mono muted">V01 · S03</span></td></tr>
+<tr id="brs-04"><td><span class="mono accent">BRS-04</span><strong class="cell-title">支持异构节点协作</strong></td><td>单一节点信息视野有限</td><td>与空中观察、地面保障等节点实现状态与信息互通。</td><td>多类节点可完成信息交换，接口语义明确。</td><td><span class="mono muted">SoS · S05</span></td></tr>
+<tr id="brs-05"><td><span class="mono accent">BRS-05</span><strong class="cell-title">支持持续保障与快速周转</strong></td><td>能源、维护及任务换装需求</td><td>通过状态监测、模块化配置和回收维护减少中断。</td><td>形成维护记录和安全更换流程。</td><td><span class="mono muted">V01 · S04 / S06</span></td></tr>
+<tr id="brs-06"><td><span class="mono accent">BRS-06</span><strong class="cell-title">在异常条件下保持安全可控</strong></td><td>弱网、失联、故障、人员接近</td><td>出现异常时优先停止高风险动作，保持人工可接管及可回收。</td><td>通过断链、故障和急停模拟验证。</td><td><span class="mono muted">M06 · S07</span></td></tr>
+<tr id="brs-07"><td><span class="mono accent">BRS-07</span><strong class="cell-title">复用平台并适应不同任务</strong></td><td>重复开发与配置复杂度</td><td>采用统一载荷接口与经批准的任务配置，降低重复集成工作量。</td><td>完成两类非武装任务载荷配置切换示范。</td><td><span class="mono muted">V01 · S04</span></td></tr>
+<tr id="brs-08"><td><span class="mono accent">BRS-08</span><strong class="cell-title">落实人类授权与责任可追溯</strong></td><td>高风险系统的安全与治理</td><td>任务启动、模式切换、异常处置等重要操作有授权、有记录。</td><td>审核权限、操作轨迹及安全审查记录。</td><td><span class="mono muted">S07</span></td></tr>
+<tr id="brs-09"><td><span class="mono accent">BRS-09</span><strong class="cell-title">建立验证与持续改进闭环</strong></td><td>概念设计需走向可验证工程设计</td><td>将需求、测试结果、问题、修订版本建立追溯关系。</td><td>每项优先级高的需求都能关联验收证据或待办。</td><td><span class="mono muted">S08</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-foot">编号“BRS-XX”用于与 StRS 需求双向追溯；判据为课程概念设计阶段的建议验证方式，不是已完成实测结论。</p>
+    <div class="subheading"><h3>01.2 · BRS 规格化补充</h3><small>参考概念定义阶段的常见 BRS 组织字段</small></div>
+    <div class="two-col">
+      <div class="panel"><h3>业务过程与交付成果</h3><ul class="body-list">
+        <li><b>任务输入：</b>授权任务说明、场景边界、安全条件、参与节点。</li>
+        <li><b>任务产出：</b>现场观察摘要、平台状态记录、人工确认结论和异常处置日志。</li>
+        <li><b>质量属性：</b>安全可控、信息可信、协作受控、可维护、可验证。</li>
+        <li><b>成效评估：</b>按场景完成率、信息完整性、异常处置结果、任务后可追溯程度进行评审。</li>
+      </ul></div>
+      <div class="panel"><h3>约束、假设与风险</h3><ul class="body-list">
+        <li><b>约束：</b>重要动作始终保留人类授权和停机能力；遵守现场安全与数据权限要求。</li>
+        <li><b>假设：</b>存在经过认证的远程操作端和可执行基本检查的保障人员。</li>
+        <li><b>主要风险：</b>场景感知误判、通信中断、能源异常、接口不一致、日志缺失。</li>
+        <li><b>待定事项：</b>任务场景测试集、可接受延时、环境等级和最终验收阈值需小组评审确认。</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+<section class="chapter" id="conops">
+  <div class="container">
+    <div class="section-title"><div><div class="eyebrow">02 / Concept of operations</div><h2>ConOps · 运营概念</h2></div><p>站在任务组织者、使用者及保障方视角描述使用场景和运营方式，强调“谁、为何、何时、在什么边界内使用”。</p></div>
+    <div class="three-col">
+      <article class="conops-card reveal"><b>WHO / 谁使用</b><h3>多角色协作</h3><p>任务负责人提出需求并授权；操作员远程控制；安全负责人确认现场边界；维护人员保障设备；分析人员核验数据。</p></article>
+      <article class="conops-card reveal"><b>WHERE / 在何处</b><h3>高风险复杂现场</h3><p>以废墟外围、复杂通道和受限空间的非武装环境勘察演示为例；现场存在不确定障碍、信息盲区和通信波动。</p></article>
+      <article class="conops-card reveal"><b>VALUE / 为什么</b><h3>风险转移与信息服务</h3><p>优先用平台采集环境信息，并将异常、限制和不确定性呈现给人，由人作出最终任务决定。</p></article>
+    </div>
+    <div class="scenario"><h3>示例任务叙事 · 坍塌建筑外围环境勘察</h3><p>某现场不适合人员在信息缺失时直接进入。任务负责人设定观察边界并组织安全检查，操作员派出 V01 进行近距环境观察；外部节点提供补充视角。平台显示观察结果及置信信息，必要时进入安全模式。任务完成后由保障人员回收检查，分析人员形成可追溯报告。该叙事用于说明系统使用方式，不代表真实部署纪录。</p></div>
+    <div class="subheading"><h3>02.1 · 运营生命周期</h3><small>从任务提出到复盘改进</small></div>
+    <div class="milestones">
+      <article class="milestone"><b>STEP 01</b><h4>任务申请</h4><p>明确目的、边界、授权角色、成功标准与退出条件。</p></article>
+      <article class="milestone"><b>STEP 02</b><h4>准备配置</h4><p>检查能源、传感器、通信、非武装载荷及现场安全。</p></article>
+      <article class="milestone"><b>STEP 03</b><h4>执行与复核</h4><p>远程感知和受控协同；信息标注来源并由人员复核。</p></article>
+      <article class="milestone"><b>STEP 04</b><h4>异常与退出</h4><p>遇失联、故障或人员安全风险时执行预设保守策略。</p></article>
+      <article class="milestone"><b>STEP 05</b><h4>回收与复盘</h4><p>完成安全回收、维护、日志归档及需求反馈。</p></article>
+    </div>
+    <div class="requirement-band"><span class="pill">运营模式：远程人工控制为主</span><span class="pill">信息结论：人工核验</span><span class="pill">退出原则：安全优先</span><span class="pill">变更管理：经批准再实施</span></div>
+  </div>
+</section>
+<section class="chapter" id="opscon">
+  <div class="container">
+    <div class="section-title"><div><div class="eyebrow">03 / Operational concept</div><h2>OpsCon · 运行概念</h2></div><p>把 ConOps 的使用叙事进一步转换为系统状态、输入输出、控制交接、异常分支与运行责任，形成可测试的行为框架。</p></div>
+    <div class="panel">
+      <div class="label">Operating state model / 点击下方状态查看说明</div>
+      <div class="state-buttons" role="group" aria-label="运行状态说明切换">
+        <button class="state-button" type="button" data-state="idle" aria-pressed="false"><strong>ST-00</strong>待命</button>
+        <button class="state-button is-active" type="button" data-state="check" aria-pressed="true"><strong>ST-01</strong>自检授权</button>
+        <button class="state-button" type="button" data-state="deploy" aria-pressed="false"><strong>ST-02</strong>部署</button>
+        <button class="state-button" type="button" data-state="operate" aria-pressed="false"><strong>ST-03</strong>受控运行</button>
+        <button class="state-button" type="button" data-state="safe" aria-pressed="false"><strong>ST-04</strong>安全模式</button>
+        <button class="state-button" type="button" data-state="return" aria-pressed="false"><strong>ST-05</strong>回收</button>
+        <button class="state-button" type="button" data-state="archive" aria-pressed="false"><strong>ST-06</strong>归档</button>
+      </div>
+      <div class="state-detail" aria-live="polite"><div><h3 id="stateTitle">ST-01 · 自检授权</h3><p id="stateText">输入任务配置与操作员身份；核验电源、通信、传感器、现场安全和必要权限；失败则保持待命，不进入部署。</p></div><span class="state-badge" id="stateBadge">安全门禁状态</span></div>
+      <p class="table-foot">状态图是逻辑概念模型；允许从运行态因异常进入 ST-04，解除异常后也必须重新走安全检查，不得直接跳过授权门禁。</p>
+    </div>
+    <div class="subheading"><h3>03.1 · 输入—处理—输出及责任分配</h3><small>正常流程 + 异常分支</small></div>
+    <div class="table-wrap"><table aria-label="运行概念阶段流程表">
+      <thead><tr><th>阶段</th><th>输入／触发</th><th>系统主要行为</th><th>输出／记录</th><th>责任及退出条件</th></tr></thead>
+      <tbody>
+        <tr><td>自检与授权</td><td>任务单、人员角色、配置、现场条件</td><td>核验授权和健康状态；检查禁止条件</td><td>自检结果、批准记录</td><td>负责人／安全负责人批准，未通过则待命</td></tr>
+        <tr><td>部署与连接</td><td>已批准任务与通信会话</td><td>建立受控连接、显示工作模式与状态</td><td>连接状态、会话身份</td><td>操作员执行，无法确认状态则中止</td></tr>
+        <tr><td>感知与信息服务</td><td>环境传感数据、授权操作指令</td><td>采集与展示观察信息，保留来源和不确定性</td><td>观察摘要、事件、人工确认项</td><td>分析人员复核，结束后转回收</td></tr>
+        <tr><td>协同信息交换</td><td>外部节点状态及观察数据</td><td>校验会话与来源，仅交换经允许的信息</td><td>共享状态、校验记录</td><td>外部信息不得直接替代人工控制</td></tr>
+        <tr><td>异常与退化</td><td>断链、健康异常、人工急停等</td><td>进入安全策略、限制动作、告警并记录</td><td>原因、时间、处置结果</td><td>安全负责人确认后才能恢复</td></tr>
+        <tr><td>回收与归档</td><td>任务完成或安全退出决定</td><td>停止运行、回收检查、生成日志与问题记录</td><td>维护单、任务报告、验证材料</td><td>维护／测试人员完成检查后闭环</td></tr>
+      </tbody>
+    </table></div>
+    <div class="two-col" style="margin-top:18px">
+      <div class="panel"><h3>正常控制链</h3><p><b>授权任务 → 健康检查 → 人工受控运行 → 信息复核 → 回收归档</b></p><p>任何基于环境信息的关键结论须向操作人员展示依据与不确定性；任务管理者对任务范围和继续执行负责。</p></div>
+      <div class="panel"><h3>异常控制链</h3><p><b>检测异常 → 限制行为 → 向人告警 → 保持安全状态 → 经复核恢复／回收</b></p><p>未获得有效控制权、现场隔离确认失效或重大健康状态异常时，不应默认继续执行原任务。</p></div>
+    </div>
+  </div>
+</section>
+<section class="chapter" id="stakeholders">
+  <div class="container">
+    <div class="section-title"><div><div class="eyebrow">04 / Stakeholder identification</div><h2>相关方列表与关注点</h2></div><p>不仅识别直接操作机器人的人员，也包括安全、保障、信息、测试及可能受运行影响的人群，避免需求只来自单一使用者。</p></div>
+    <div class="table-wrap"><table aria-label="相关方识别表">
+      <thead><tr><th>编号</th><th>相关方</th><th>角色／责任</th><th>核心关注与诉求</th><th>影响程度*</th></tr></thead>
+      <tbody><tr id="sh-01"><td class="mono accent">SH-01</td><td><strong>任务需求方</strong></td><td>提出使用目标、范围、验收规则</td><td>任务价值、效果与交付边界</td><td><span class="importance">高</span></td></tr>
+<tr id="sh-02"><td class="mono accent">SH-02</td><td><strong>任务负责人／指挥席</strong></td><td>批准任务、分配角色、处理升级事项</td><td>状态清晰、责任明确、可停止任务</td><td><span class="importance">高</span></td></tr>
+<tr id="sh-03"><td class="mono accent">SH-03</td><td><strong>远程操作员</strong></td><td>执行遥控、监视与人工接管</td><td>操作负荷、实时状态、清晰告警</td><td><span class="importance">高</span></td></tr>
+<tr id="sh-04"><td class="mono accent">SH-04</td><td><strong>现场安全负责人</strong></td><td>划定安全边界、审查异常处置</td><td>失效安全、急停、现场人员保护</td><td><span class="importance">高</span></td></tr>
+<tr id="sh-05"><td class="mono accent">SH-05</td><td><strong>维护保障人员</strong></td><td>检查、更换模块、回收与检修</td><td>易维护、故障定位、能源健康</td><td><span class="importance">中</span></td></tr>
+<tr id="sh-06"><td class="mono accent">SH-06</td><td><strong>异构平台协同团队</strong></td><td>提供外部节点数据和接口</td><td>互操作、数据格式与隔离机制</td><td><span class="importance">中</span></td></tr>
+<tr id="sh-07"><td class="mono accent">SH-07</td><td><strong>信息分析与记录人员</strong></td><td>审核现场信息和任务记录</td><td>时间戳、可信度、可导出记录</td><td><span class="importance">中</span></td></tr>
+<tr id="sh-08"><td class="mono accent">SH-08</td><td><strong>信息安全管理员</strong></td><td>配置权限与审计安全事件</td><td>最小权限、认证、审计</td><td><span class="importance">高</span></td></tr>
+<tr id="sh-09"><td class="mono accent">SH-09</td><td><strong>研发／测试评估团队</strong></td><td>集成、验证、回归测试</td><td>可测量、可追溯、可复现</td><td><span class="importance">高</span></td></tr>
+<tr id="sh-10"><td class="mono accent">SH-10</td><td><strong>现场人员及受影响方</strong></td><td>处于任务环境或近旁</td><td>人身安全、隐私与清晰的运行边界</td><td><span class="importance">中</span></td></tr></tbody>
+    </table></div>
+    <p class="table-foot">* “影响程度”是为课堂分析提出的初步评估，并非对实际组织权责的确认；相关方名单与优先级需后续讨论审定。</p>
+    <div class="three-col" style="margin-top:18px">
+      <div class="panel"><h3>直接使用相关方</h3><p>任务负责人、操作员、分析人员：关心任务有用、操作明确、信息可靠和可理解。</p></div>
+      <div class="panel"><h3>保障治理相关方</h3><p>安全、维护、安全管理员、测试团队：关心故障、安全边界、接口和验收证据。</p></div>
+      <div class="panel"><h3>环境及外部相关方</h3><p>协同平台团队、现场人员及受影响方：关心互操作、信息边界和人身安全。</p></div>
+    </div>
+  </div>
+</section>
+<section class="chapter" id="strs">
+  <div class="container">
+    <div class="section-title"><div><div class="eyebrow">05 / Stakeholder requirements specification</div><h2>StRS · 相关方需求</h2></div><p>用“系统应当……”陈述可验证的需求，并为每条需求关联提出方、上层 BRS、验证方法与初步优先级。支持筛选、关键词搜索和编号跳转。</p></div>
+    <div class="panel">
+      <div class="req-toolbar">
+        <div class="filters" role="group" aria-label="按需求类别筛选">
+          <button class="filter-button is-active" type="button" data-filter="全部" aria-pressed="true">全部</button>
+          <button class="filter-button" type="button" data-filter="控制与安全" aria-pressed="false">控制与安全</button>
+          <button class="filter-button" type="button" data-filter="感知与信息" aria-pressed="false">感知与信息</button>
+          <button class="filter-button" type="button" data-filter="协同与通信" aria-pressed="false">协同与通信</button>
+          <button class="filter-button" type="button" data-filter="保障与维护" aria-pressed="false">保障与维护</button>
+          <button class="filter-button" type="button" data-filter="数据与验证" aria-pressed="false">数据与验证</button>
+        </div>
+        <input class="search-field" id="reqSearch" type="search" aria-label="搜索需求编号或文本" placeholder="搜索 STR-03 / 失联 / SH-08 ...">
+      </div>
+      <div class="table-wrap"><table aria-label="相关方需求规格说明StRS清单">
+        <thead><tr><th>需求编号／类别</th><th>相关方需求陈述（应当）</th><th>需求相关方</th><th>上层 BRS</th><th>验证方法／预期证据</th><th>级别</th></tr></thead>
+        <tbody id="reqBody"><tr id="str-01" class="req-row" data-category="控制与安全" data-search="str-01 控制与安全 系统应在每次任务开始前核验任务授权、操作者角色及任务配置；核验未通过时不得进入执行状态。 sh-01,sh-02,sh-08 brs-08 演示：未授权账户无法启动任务；保留审计记录。 p0"><td><span class="mono accent">STR-01</span><span class="category-tag">控制与安全</span></td><td class="req-description">系统应在每次任务开始前核验任务授权、操作者角色及任务配置；核验未通过时不得进入执行状态。</td><td><a class="id-chip" href="#sh-01">SH-01</a> <a class="id-chip" href="#sh-02">SH-02</a> <a class="id-chip" href="#sh-08">SH-08</a></td><td><a class="id-chip" href="#brs-08">BRS-08</a></td><td>演示：未授权账户无法启动任务；保留审计记录。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-02" class="req-row" data-category="感知与信息" data-search="str-02 感知与信息 系统应向操作员显示在线状态、控制模式、能源状态、通信状态及最近一次更新时刻。 sh-03,sh-07 brs-02 演示：模拟状态变化，界面字段正确更新。 p0"><td><span class="mono accent">STR-02</span><span class="category-tag">感知与信息</span></td><td class="req-description">系统应向操作员显示在线状态、控制模式、能源状态、通信状态及最近一次更新时刻。</td><td><a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-07">SH-07</a></td><td><a class="id-chip" href="#brs-02">BRS-02</a></td><td>演示：模拟状态变化，界面字段正确更新。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-03" class="req-row" data-category="控制与安全" data-search="str-03 控制与安全 系统应提供人工接管入口，且人工停机或人工接管指令应优先于一般自主任务指令。 sh-02,sh-03,sh-04 brs-06,brs-08 测试：构造自动任务与接管请求并发场景。 p0"><td><span class="mono accent">STR-03</span><span class="category-tag">控制与安全</span></td><td class="req-description">系统应提供人工接管入口，且人工停机或人工接管指令应优先于一般自主任务指令。</td><td><a class="id-chip" href="#sh-02">SH-02</a> <a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-04">SH-04</a></td><td><a class="id-chip" href="#brs-06">BRS-06</a> <a class="id-chip" href="#brs-08">BRS-08</a></td><td>测试：构造自动任务与接管请求并发场景。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-04" class="req-row" data-category="控制与安全" data-search="str-04 控制与安全 系统应在通信超时或控制状态不可确认时，进入经评审的保守安全模式，并向操作端显示原因。 sh-03,sh-04 brs-06 测试：注入断链；检查动作、告警及状态记录。 p0"><td><span class="mono accent">STR-04</span><span class="category-tag">控制与安全</span></td><td class="req-description">系统应在通信超时或控制状态不可确认时，进入经评审的保守安全模式，并向操作端显示原因。</td><td><a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-04">SH-04</a></td><td><a class="id-chip" href="#brs-06">BRS-06</a></td><td>测试：注入断链；检查动作、告警及状态记录。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-05" class="req-row" data-category="控制与安全" data-search="str-05 控制与安全 系统应支持可辨识的急停操作，并在恢复运行前要求重新确认安全状态。 sh-03,sh-04 brs-06,brs-08 演示：触发急停、确认安全后复位。 p0"><td><span class="mono accent">STR-05</span><span class="category-tag">控制与安全</span></td><td class="req-description">系统应支持可辨识的急停操作，并在恢复运行前要求重新确认安全状态。</td><td><a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-04">SH-04</a></td><td><a class="id-chip" href="#brs-06">BRS-06</a> <a class="id-chip" href="#brs-08">BRS-08</a></td><td>演示：触发急停、确认安全后复位。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-06" class="req-row" data-category="控制与安全" data-search="str-06 控制与安全 系统应显示当前轮式／轮腿姿态模式，并限制未经安全检查的模式切换。 sh-03,sh-09 brs-03 试验：在预设不适合切换的条件下阻止切换。 p1"><td><span class="mono accent">STR-06</span><span class="category-tag">控制与安全</span></td><td class="req-description">系统应显示当前轮式／轮腿姿态模式，并限制未经安全检查的模式切换。</td><td><a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-09">SH-09</a></td><td><a class="id-chip" href="#brs-03">BRS-03</a></td><td>试验：在预设不适合切换的条件下阻止切换。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-07" class="req-row" data-category="感知与信息" data-search="str-07 感知与信息 系统应为采集的环境观察数据关联时间、传感器来源、任务标识和可用的位置信息。 sh-07,sh-09 brs-01,brs-02 检查：抽取数据样本核对字段完整性。 p0"><td><span class="mono accent">STR-07</span><span class="category-tag">感知与信息</span></td><td class="req-description">系统应为采集的环境观察数据关联时间、传感器来源、任务标识和可用的位置信息。</td><td><a class="id-chip" href="#sh-07">SH-07</a> <a class="id-chip" href="#sh-09">SH-09</a></td><td><a class="id-chip" href="#brs-01">BRS-01</a> <a class="id-chip" href="#brs-02">BRS-02</a></td><td>检查：抽取数据样本核对字段完整性。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-08" class="req-row" data-category="感知与信息" data-search="str-08 感知与信息 系统应将不确定的环境异常作为待核验线索展示，不得将未核验的识别结果表述为确定结论。 sh-02,sh-07,sh-10 brs-01,brs-02 演示：模拟低置信线索并检查提示文案。 p1"><td><span class="mono accent">STR-08</span><span class="category-tag">感知与信息</span></td><td class="req-description">系统应将不确定的环境异常作为待核验线索展示，不得将未核验的识别结果表述为确定结论。</td><td><a class="id-chip" href="#sh-02">SH-02</a> <a class="id-chip" href="#sh-07">SH-07</a> <a class="id-chip" href="#sh-10">SH-10</a></td><td><a class="id-chip" href="#brs-01">BRS-01</a> <a class="id-chip" href="#brs-02">BRS-02</a></td><td>演示：模拟低置信线索并检查提示文案。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-09" class="req-row" data-category="感知与信息" data-search="str-09 感知与信息 系统应允许授权用户导出已采集的环境观察摘要，并明确区分自动生成内容与人工确认内容。 sh-01,sh-07 brs-01,brs-02 演示：导出任务摘要并核对确认标记。 p1"><td><span class="mono accent">STR-09</span><span class="category-tag">感知与信息</span></td><td class="req-description">系统应允许授权用户导出已采集的环境观察摘要，并明确区分自动生成内容与人工确认内容。</td><td><a class="id-chip" href="#sh-01">SH-01</a> <a class="id-chip" href="#sh-07">SH-07</a></td><td><a class="id-chip" href="#brs-01">BRS-01</a> <a class="id-chip" href="#brs-02">BRS-02</a></td><td>演示：导出任务摘要并核对确认标记。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-10" class="req-row" data-category="协同与通信" data-search="str-10 协同与通信 系统应通过受控接口接收其他平台的状态与观察信息，外部消息不得直接绕过本机授权控制。 sh-06,sh-08 brs-04 接口试验：正常报文可读；未经授权控制消息被拒绝。 p0"><td><span class="mono accent">STR-10</span><span class="category-tag">协同与通信</span></td><td class="req-description">系统应通过受控接口接收其他平台的状态与观察信息，外部消息不得直接绕过本机授权控制。</td><td><a class="id-chip" href="#sh-06">SH-06</a> <a class="id-chip" href="#sh-08">SH-08</a></td><td><a class="id-chip" href="#brs-04">BRS-04</a></td><td>接口试验：正常报文可读；未经授权控制消息被拒绝。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-11" class="req-row" data-category="协同与通信" data-search="str-11 协同与通信 系统应在展示共享信息时保留来源节点、时间戳及数据有效性状态。 sh-06,sh-07 brs-02,brs-04 检查：多节点样例数据字段齐全。 p1"><td><span class="mono accent">STR-11</span><span class="category-tag">协同与通信</span></td><td class="req-description">系统应在展示共享信息时保留来源节点、时间戳及数据有效性状态。</td><td><a class="id-chip" href="#sh-06">SH-06</a> <a class="id-chip" href="#sh-07">SH-07</a></td><td><a class="id-chip" href="#brs-02">BRS-02</a> <a class="id-chip" href="#brs-04">BRS-04</a></td><td>检查：多节点样例数据字段齐全。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-12" class="req-row" data-category="协同与通信" data-search="str-12 协同与通信 系统应对控制通信会话进行身份认证，并可撤销失效或不再授权的会话。 sh-03,sh-08 brs-04,brs-08 测试：使用无效身份和已撤销会话。 p0"><td><span class="mono accent">STR-12</span><span class="category-tag">协同与通信</span></td><td class="req-description">系统应对控制通信会话进行身份认证，并可撤销失效或不再授权的会话。</td><td><a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-08">SH-08</a></td><td><a class="id-chip" href="#brs-04">BRS-04</a> <a class="id-chip" href="#brs-08">BRS-08</a></td><td>测试：使用无效身份和已撤销会话。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-13" class="req-row" data-category="协同与通信" data-search="str-13 协同与通信 系统应记录通信中断与恢复事件，并在恢复后向操作员提示状态同步结果。 sh-03,sh-06 brs-04,brs-06 测试：模拟断链重连、检查事件顺序。 p1"><td><span class="mono accent">STR-13</span><span class="category-tag">协同与通信</span></td><td class="req-description">系统应记录通信中断与恢复事件，并在恢复后向操作员提示状态同步结果。</td><td><a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-06">SH-06</a></td><td><a class="id-chip" href="#brs-04">BRS-04</a> <a class="id-chip" href="#brs-06">BRS-06</a></td><td>测试：模拟断链重连、检查事件顺序。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-14" class="req-row" data-category="保障与维护" data-search="str-14 保障与维护 系统应持续监测电源与温度健康状态，并在越过经评审的安全阈值时发出告警。 sh-03,sh-05 brs-05 测试：注入阈值边界值并检查告警。 p0"><td><span class="mono accent">STR-14</span><span class="category-tag">保障与维护</span></td><td class="req-description">系统应持续监测电源与温度健康状态，并在越过经评审的安全阈值时发出告警。</td><td><a class="id-chip" href="#sh-03">SH-03</a> <a class="id-chip" href="#sh-05">SH-05</a></td><td><a class="id-chip" href="#brs-05">BRS-05</a></td><td>测试：注入阈值边界值并检查告警。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-15" class="req-row" data-category="保障与维护" data-search="str-15 保障与维护 系统应在任务载荷拆装或更换前提供安全隔离与确认步骤，并记录配置版本。 sh-05,sh-09 brs-05,brs-07 演示：执行两种非武装载荷配置的安全更换。 p1"><td><span class="mono accent">STR-15</span><span class="category-tag">保障与维护</span></td><td class="req-description">系统应在任务载荷拆装或更换前提供安全隔离与确认步骤，并记录配置版本。</td><td><a class="id-chip" href="#sh-05">SH-05</a> <a class="id-chip" href="#sh-09">SH-09</a></td><td><a class="id-chip" href="#brs-05">BRS-05</a> <a class="id-chip" href="#brs-07">BRS-07</a></td><td>演示：执行两种非武装载荷配置的安全更换。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-16" class="req-row" data-category="保障与维护" data-search="str-16 保障与维护 系统应提供故障代码、维护记录以及部件状态查询能力。 sh-05,sh-09 brs-05,brs-09 检查：故障演示后可检索对应记录。 p1"><td><span class="mono accent">STR-16</span><span class="category-tag">保障与维护</span></td><td class="req-description">系统应提供故障代码、维护记录以及部件状态查询能力。</td><td><a class="id-chip" href="#sh-05">SH-05</a> <a class="id-chip" href="#sh-09">SH-09</a></td><td><a class="id-chip" href="#brs-05">BRS-05</a> <a class="id-chip" href="#brs-09">BRS-09</a></td><td>检查：故障演示后可检索对应记录。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-17" class="req-row" data-category="数据与验证" data-search="str-17 数据与验证 系统应在任务结束时生成包含任务标识、状态变化、异常事件和人工处理记录的可导出日志。 sh-01,sh-07,sh-09 brs-09 检查：任务日志字段完整、可读取。 p0"><td><span class="mono accent">STR-17</span><span class="category-tag">数据与验证</span></td><td class="req-description">系统应在任务结束时生成包含任务标识、状态变化、异常事件和人工处理记录的可导出日志。</td><td><a class="id-chip" href="#sh-01">SH-01</a> <a class="id-chip" href="#sh-07">SH-07</a> <a class="id-chip" href="#sh-09">SH-09</a></td><td><a class="id-chip" href="#brs-09">BRS-09</a></td><td>检查：任务日志字段完整、可读取。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-18" class="req-row" data-category="数据与验证" data-search="str-18 数据与验证 系统应按角色实施最小权限管理，并记录重要权限变更。 sh-02,sh-08 brs-08 测试：不同角色执行权限边界测试。 p0"><td><span class="mono accent">STR-18</span><span class="category-tag">数据与验证</span></td><td class="req-description">系统应按角色实施最小权限管理，并记录重要权限变更。</td><td><a class="id-chip" href="#sh-02">SH-02</a> <a class="id-chip" href="#sh-08">SH-08</a></td><td><a class="id-chip" href="#brs-08">BRS-08</a></td><td>测试：不同角色执行权限边界测试。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-19" class="req-row" data-category="数据与验证" data-search="str-19 数据与验证 系统应对任务开始、控制权转移、安全模式切换及恢复操作生成可追溯审计事件。 sh-02,sh-04,sh-08 brs-08 检查：事件包含操作者、时间、动作和结果。 p0"><td><span class="mono accent">STR-19</span><span class="category-tag">数据与验证</span></td><td class="req-description">系统应对任务开始、控制权转移、安全模式切换及恢复操作生成可追溯审计事件。</td><td><a class="id-chip" href="#sh-02">SH-02</a> <a class="id-chip" href="#sh-04">SH-04</a> <a class="id-chip" href="#sh-08">SH-08</a></td><td><a class="id-chip" href="#brs-08">BRS-08</a></td><td>检查：事件包含操作者、时间、动作和结果。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-20" class="req-row" data-category="数据与验证" data-search="str-20 数据与验证 系统应保留可识别的软件／配置版本，并支持经审核的升级、验证和回退流程。 sh-05,sh-09 brs-07,brs-09 演示：版本查询及受控回退流程。 p1"><td><span class="mono accent">STR-20</span><span class="category-tag">数据与验证</span></td><td class="req-description">系统应保留可识别的软件／配置版本，并支持经审核的升级、验证和回退流程。</td><td><a class="id-chip" href="#sh-05">SH-05</a> <a class="id-chip" href="#sh-09">SH-09</a></td><td><a class="id-chip" href="#brs-07">BRS-07</a> <a class="id-chip" href="#brs-09">BRS-09</a></td><td>演示：版本查询及受控回退流程。</td><td><span class="priority ">P1</span></td></tr>
+<tr id="str-21" class="req-row" data-category="控制与安全" data-search="str-21 控制与安全 系统应在部署前要求确认现场隔离范围与人员安全条件；未确认时不得启动机动操作。 sh-04,sh-10 brs-01,brs-03,brs-06 演示：省略现场确认步骤时无法开始运动。 p0"><td><span class="mono accent">STR-21</span><span class="category-tag">控制与安全</span></td><td class="req-description">系统应在部署前要求确认现场隔离范围与人员安全条件；未确认时不得启动机动操作。</td><td><a class="id-chip" href="#sh-04">SH-04</a> <a class="id-chip" href="#sh-10">SH-10</a></td><td><a class="id-chip" href="#brs-01">BRS-01</a> <a class="id-chip" href="#brs-03">BRS-03</a> <a class="id-chip" href="#brs-06">BRS-06</a></td><td>演示：省略现场确认步骤时无法开始运动。</td><td><span class="priority priority-critical">P0</span></td></tr>
+<tr id="str-22" class="req-row" data-category="数据与验证" data-search="str-22 数据与验证 研发与评估人员应能将每项高优先级需求关联到测试用例、结果与问题记录。 sh-01,sh-09 brs-03,brs-08,brs-09 审查：需求—用例—结果—问题双向追溯。 p1"><td><span class="mono accent">STR-22</span><span class="category-tag">数据与验证</span></td><td class="req-description">研发与评估人员应能将每项高优先级需求关联到测试用例、结果与问题记录。</td><td><a class="id-chip" href="#sh-01">SH-01</a> <a class="id-chip" href="#sh-09">SH-09</a></td><td><a class="id-chip" href="#brs-03">BRS-03</a> <a class="id-chip" href="#brs-08">BRS-08</a> <a class="id-chip" href="#brs-09">BRS-09</a></td><td>审查：需求—用例—结果—问题双向追溯。</td><td><span class="priority ">P1</span></td></tr></tbody>
+      </table></div>
+      <div id="noResults" class="no-results" hidden>没有匹配的需求。可清除搜索词或切回“全部”。</div>
+      <p class="table-foot"><span id="reqCount" aria-live="polite">当前显示 22 / 22 项</span> · P0：安全与概念验证的优先项；P1：设计细化项。优先级及测试阈值均为建议，尚待团队确认。</p>
+    </div>
+    <div class="subheading"><h3>05.1 · 需求质量与验收原则</h3></div>
+    <div class="tips-grid">
+      <div class="tip"><h4><span class="tip-no">01</span>可验证</h4><p>避免“足够智能”“绝对可靠”等不可验证表达；要求对应演示、测试、检查或分析。</p></div>
+      <div class="tip"><h4><span class="tip-no">02</span>可追溯</h4><p>每条 StRS 映射到一个或多个业务目标和相关方，变更时能分析影响范围。</p></div>
+      <div class="tip"><h4><span class="tip-no">03</span>不预设达标</h4><p>性能目标与安全阈值必须通过场景测试和权衡确定；本页不把提议指标当成已证实能力。</p></div>
+    </div>
+  </div>
+</section>
+<section class="chapter" id="trace">
+  <div class="container">
+    <div class="section-title"><div><div class="eyebrow">06 / Traceability & validation</div><h2>需求追溯与评审结论</h2></div><p>把“业务动因—相关方需要—可验收证据”串联为闭环，便于下一次作业开展体系架构分配和验证设计。</p></div>
+    <div class="table-wrap"><table aria-label="BRS到StRS需求追溯矩阵">
+      <thead><tr><th>上层业务需求</th><th>业务目标</th><th>对应 StRS 需求</th><th>主要验证策略</th></tr></thead>
+      <tbody><tr><td><a href="#brs-01" class="mono accent">BRS-01</a></td><td>降低高风险现场人员暴露</td><td><a class="id-chip" href="#str-07">STR-07</a> <a class="id-chip" href="#str-08">STR-08</a> <a class="id-chip" href="#str-09">STR-09</a> <a class="id-chip" href="#str-21">STR-21</a></td><td>演示／审查</td></tr>
+<tr><td><a href="#brs-02" class="mono accent">BRS-02</a></td><td>形成可信的环境信息服务</td><td><a class="id-chip" href="#str-02">STR-02</a> <a class="id-chip" href="#str-07">STR-07</a> <a class="id-chip" href="#str-08">STR-08</a> <a class="id-chip" href="#str-09">STR-09</a> <a class="id-chip" href="#str-11">STR-11</a></td><td>演示／审查</td></tr>
+<tr><td><a href="#brs-03" class="mono accent">BRS-03</a></td><td>适应混合地面环境</td><td><a class="id-chip" href="#str-06">STR-06</a> <a class="id-chip" href="#str-21">STR-21</a> <a class="id-chip" href="#str-22">STR-22</a></td><td>演示／审查</td></tr>
+<tr><td><a href="#brs-04" class="mono accent">BRS-04</a></td><td>支持异构节点协作</td><td><a class="id-chip" href="#str-10">STR-10</a> <a class="id-chip" href="#str-11">STR-11</a> <a class="id-chip" href="#str-12">STR-12</a> <a class="id-chip" href="#str-13">STR-13</a></td><td>演示／审查</td></tr>
+<tr><td><a href="#brs-05" class="mono accent">BRS-05</a></td><td>支持持续保障与快速周转</td><td><a class="id-chip" href="#str-14">STR-14</a> <a class="id-chip" href="#str-15">STR-15</a> <a class="id-chip" href="#str-16">STR-16</a></td><td>演示／审查</td></tr>
+<tr><td><a href="#brs-06" class="mono accent">BRS-06</a></td><td>在异常条件下保持安全可控</td><td><a class="id-chip" href="#str-03">STR-03</a> <a class="id-chip" href="#str-04">STR-04</a> <a class="id-chip" href="#str-05">STR-05</a> <a class="id-chip" href="#str-13">STR-13</a> <a class="id-chip" href="#str-21">STR-21</a></td><td>演示、试验、审查</td></tr>
+<tr><td><a href="#brs-07" class="mono accent">BRS-07</a></td><td>复用平台并适应不同任务</td><td><a class="id-chip" href="#str-15">STR-15</a> <a class="id-chip" href="#str-20">STR-20</a></td><td>演示／审查</td></tr>
+<tr><td><a href="#brs-08" class="mono accent">BRS-08</a></td><td>落实人类授权与责任可追溯</td><td><a class="id-chip" href="#str-01">STR-01</a> <a class="id-chip" href="#str-03">STR-03</a> <a class="id-chip" href="#str-05">STR-05</a> <a class="id-chip" href="#str-12">STR-12</a> <a class="id-chip" href="#str-18">STR-18</a> <a class="id-chip" href="#str-19">STR-19</a> <a class="id-chip" href="#str-22">STR-22</a></td><td>演示、试验、审查</td></tr>
+<tr><td><a href="#brs-09" class="mono accent">BRS-09</a></td><td>建立验证与持续改进闭环</td><td><a class="id-chip" href="#str-16">STR-16</a> <a class="id-chip" href="#str-17">STR-17</a> <a class="id-chip" href="#str-20">STR-20</a> <a class="id-chip" href="#str-22">STR-22</a></td><td>演示／审查</td></tr></tbody>
+    </table></div>
+    <div class="two-col" style="margin-top:19px">
+      <div class="panel"><div class="label">Open points / 待小组评审</div><h3>需要进一步确定的事项</h3>
+      <ul class="body-list">
+        <li>确认小组最终选择的是“V01 单机系统”还是其所处的完整 SoS，本页以 V01 为主、SoS 为背景。</li>
+        <li>确认实际拟验收的任务场景、环境约束、设备边界与数据权限。</li>
+        <li>为响应时延、机动通过能力、任务完成率等性能指标制定试验定义及可接受阈值。</li>
+        <li>核对课程教材第 4 章表 4-1、表 4-5 的准确字段并按教师要求调整命名。</li>
+      </ul></div>
+      <div class="panel"><div class="label">AI-supported draft / 形成过程说明</div><h3>来源、方法与诚实性声明</h3>
+      <ul class="body-list">
+        <li><b>既有来源：</b>作业一仓库公开的系统架构，尤其 U01 / V01 与 S01–S08 的概念设计。</li>
+        <li><b>作业要求：</b>小组作业 2 课件照片，明确 BRS、StRS、ConOps、OpsCon 与相关方分析。</li>
+        <li><b>辅助方法：</b>按照业务目标分解、相关方识别、规范化需求及双向追溯组织草案。</li>
+        <li><b>限制：</b>未取得小组真实讨论纪要及教材两张表的原文；这里的要求和优先级属于建议版，不冒充访谈结果或实测数据。</li>
+      </ul></div>
+    </div>
+    <div class="notice">本页面是课程概念定义阶段的 <b>BRS + StRS 可评审初稿</b>。后续建议由小组逐条确认需求责任人、验收阈值及测试证据，形成正式基线。</div>
+  </div>
+</section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid"><div><h2>从体系概念，到需求闭环。</h2><p>复杂系统工程 · 小组作业2 · 具身智能组</p><p>Duan xy · 15241604 · HTML 独立页面，无需安装依赖；可直接放入第一次作业的 GitHub 仓库。</p></div><div class="footer-links"><a href="index.html">回到作业一</a><a href="#top">返回顶部 ↑</a><a href="https://github.com/duanxy-666/homework01_complex-systems-engineering" target="_blank" rel="noopener noreferrer">查看原项目</a></div></div>
+    <div class="copy-note">© 2026 具身智能组 · BRS / ConOps / OpsCon / Stakeholders / StRS · 概念定义与课堂研究用途。<br>文档日期：2026-11-18。需求状态：未正式确认；请在提交前依据小组讨论与教材框架复核。</div>
+  </div>
+</footer>
+<script>
+document.documentElement.classList.add('js');
+const nav = document.getElementById('navLinks');
+const menuButton = document.getElementById('menuButton');
+menuButton.addEventListener('click', () => {
+  const open = nav.classList.toggle('open');
+  menuButton.setAttribute('aria-expanded', String(open));
+  menuButton.textContent = open ? '× 关闭' : '☰ 菜单';
+});
+nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  nav.classList.remove('open');
+  menuButton.setAttribute('aria-expanded','false');
+  menuButton.textContent='☰ 菜单';
+}));
+const stateText = {
+  idle: ['ST-00 · 待命', '平台处于已停机或安全待机状态；接收任务申请但不执行机动操作。进入自检必须有人提出并批准任务请求。', '安全待机'],
+  check: ['ST-01 · 自检授权', '输入任务配置与操作员身份；核验电源、通信、传感器、现场安全和必要权限；失败则保持待命，不进入部署。', '安全门禁状态'],
+  deploy: ['ST-02 · 部署', '经批准后建立受控通信会话，确认现场隔离、控制权归属与运行模式；不满足前提即退回安全状态。', '人工批准'],
+  operate: ['ST-03 · 受控运行', '在任务许可范围内采集环境信息、展示平台健康状态、交换已授权数据；随时接受人工接管和停机请求。', '人在控制环内'],
+  safe: ['ST-04 · 安全模式', '由人工急停、通信异常或健康异常触发；限制高风险动作、保留事件记录，等待人工确认恢复或回收。', '异常优先'],
+  return: ['ST-05 · 回收', '根据人工决策停止任务并执行安全回收准备，记录部件健康、任务配置和异常处置状态。', '安全退出'],
+  archive: ['ST-06 · 归档', '保存任务日志、观察摘要、维护记录和问题清单；将验证证据关联至需求编号，形成持续改进输入。', '追溯闭环']
+};
+document.querySelectorAll('.state-button').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.state-button').forEach(x => {x.classList.remove('is-active');x.setAttribute('aria-pressed','false');});
+  btn.classList.add('is-active');btn.setAttribute('aria-pressed','true');
+  const v = stateText[btn.dataset.state];
+  document.getElementById('stateTitle').textContent=v[0];
+  document.getElementById('stateText').textContent=v[1];
+  document.getElementById('stateBadge').textContent=v[2];
+}));
+let activeFilter = '全部';
+const reqRows = [...document.querySelectorAll('.req-row')];
+const reqSearch = document.getElementById('reqSearch');
+const reqCount = document.getElementById('reqCount');
+function filterRequirements(){
+  const term=reqSearch.value.trim().toLowerCase();
+  let visible=0;
+  reqRows.forEach(row => {
+    const ok=(activeFilter==='全部'||row.dataset.category===activeFilter)&&row.dataset.search.includes(term);
+    row.hidden=!ok;
+    if(ok)visible++;
+  });
+  reqCount.textContent=`当前显示 ${visible} / ${reqRows.length} 项`;
+  document.getElementById('noResults').hidden=visible!==0;
+}
+reqSearch.addEventListener('input',filterRequirements);
+document.querySelectorAll('.filter-button').forEach(btn => btn.addEventListener('click',()=>{
+  activeFilter=btn.dataset.filter;
+  document.querySelectorAll('.filter-button').forEach(x=>{x.classList.remove('is-active');x.setAttribute('aria-pressed','false')});
+  btn.classList.add('is-active');btn.setAttribute('aria-pressed','true');filterRequirements();
+}));
+function showRequirementFromHash(){
+  if(!location.hash.startsWith('#str-'))return;
+  activeFilter='全部';reqSearch.value='';
+  document.querySelectorAll('.filter-button').forEach(btn=>{
+    const selected=btn.dataset.filter==='全部';btn.classList.toggle('is-active',selected);btn.setAttribute('aria-pressed',String(selected));
+  });filterRequirements();
+}
+window.addEventListener('hashchange',showRequirementFromHash);showRequirementFromHash();
+if('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+  const observer=new IntersectionObserver((entries)=>entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}
+  }),{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+}else{document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'))}
+</script>
+</body>
+</html>
