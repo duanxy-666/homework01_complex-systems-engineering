@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#081018">
+<meta name="description" content="复杂系统工程 · 具身智能组。一个 HTML 切换查看原版作业一（含完整原图）和小组作业二（BRS、ConOps、OpsCon、相关方、StRS）。">
+<title>具身智能组｜复杂系统工程 · 作业一与作业二</title>
+<style>
+:root{
+ --bg:#081018;--surface:#0e1822;--surface2:#131f2b;--line:rgba(235,247,255,.12);
+ --text:#eef5fb;--text2:#cbd9e5;--muted:#8d9eaf;--accent:#ff7a3d;--accent2:#ffb36a;--cyan:#65dcff;
+ --max:1140px;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);overflow:hidden;line-height:1.8}
+button,input{font:inherit}button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+[hidden]{display:none!important}
+.works{height:100vh;height:100dvh;width:100%;position:relative}
+.work{height:100%;width:100%}
+#work1{position:relative}
+#originalFrame{height:100%;width:100%;border:0;display:block;background:#081018}
+.load-cover{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(160deg,#0d1823,#081018);padding:24px;z-index:2}
+.load-box{text-align:center;max-width:530px;padding:26px}
+.load-box .symbol{height:44px;width:44px;border:1px solid rgba(255,122,61,.5);color:var(--accent2);border-radius:13px;margin:auto auto 20px;display:grid;place-items:center;font-weight:900;font-size:1.1rem}
+.load-box h2{font-size:1.5rem;margin:0 0 8px}
+.load-box p{color:var(--muted);font-size:.93rem;margin:0 0 18px}
+.load-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.action{border:1px solid var(--line);background:var(--surface2);border-radius:9px;color:var(--text);padding:9px 15px;font-weight:700}
+.action:hover{border-color:rgba(255,179,106,.7)}
+.action.primary{border-color:var(--accent);background:var(--accent);color:#17202b}
+.load-status{font-size:.76rem!important;margin-top:17px!important;color:#b9cad7!important}
+.dock{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+ display:flex;align-items:center;gap:5px;padding:6px;background:rgba(9,19,29,.94);backdrop-filter:blur(18px);
+ border:1px solid rgba(255,255,255,.18);border-radius:15px;box-shadow:0 12px 42px rgba(0,0,0,.5);z-index:60;white-space:nowrap}
+.dock button{border:0;border-radius:10px;background:transparent;color:#bdcfdd;padding:10px 22px;font-size:.9rem;font-weight:750;transition:.18s ease}
+.dock button:hover{color:#fff;background:rgba(255,255,255,.06)}
+.dock button[aria-pressed=true]{background:linear-gradient(135deg,#f4834b,#ed985d);color:#111921;box-shadow:0 6px 18px rgba(255,122,61,.18)}
+.dock .dock-no{font:800 .8rem ui-monospace,monospace;opacity:.74;margin-right:6px}
+#work2{overflow-y:auto;scroll-behavior:smooth;background:
+ radial-gradient(ellipse 800px 480px at 3% -10%,rgba(255,122,61,.085),transparent 65%),
+ radial-gradient(ellipse 640px 480px at 94% 0%,rgba(38,153,255,.09),transparent 65%),#081018}
+.page2-container{width:min(var(--max),calc(100% - 44px));margin:auto}
+.page2-top{padding:64px 0 34px;display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:center}
+.page2-kicker{font-size:.74rem;letter-spacing:.19em;color:var(--accent2);font-weight:800}
+.page2-top h1{font-size:clamp(2.55rem,4.55vw,4.65rem);line-height:1.13;letter-spacing:-.045em;margin:14px 0 17px;font-weight:900}
+.page2-top h1 em{font-style:normal;color:var(--accent2)}
+.page2-lead{color:var(--text2);font-size:1.04rem;max-width:690px;margin:0}
+.page2-meta{font-size:.82rem;color:var(--muted);margin:18px 0 0}
+.file-tools{display:flex;align-items:center;flex-wrap:wrap;gap:11px;margin-top:13px}
+.hero-photo{border-radius:18px;aspect-ratio:1.33;overflow:hidden;border:1px solid var(--line);background:#132330;position:relative}
+.hero-photo img{height:100%;width:100%;object-fit:cover}
+.hero-photo .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;font-weight:800;letter-spacing:.1em;color:#b4d6e6;background:radial-gradient(circle at 30% 20%,#254154,#101d29)}
+.hero-photo .fallback strong{font-size:1.5rem;color:var(--accent2);letter-spacing:.04em}
+.hero-photo figcaption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.87),transparent);padding:42px 14px 12px;font-size:.75rem;text-align:right;color:#e5eff5}
+.hero-photo img:not([hidden])~.fallback{display:none}
+.topic-nav{display:flex;gap:6px;overflow-x:auto;padding:7px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);margin:0 0 30px;scrollbar-width:thin}
+.topic-tab{flex:1;min-width:max-content;border:0;border-radius:9px;background:transparent;color:#bacada;padding:11px 13px;font-size:.9rem;font-weight:750;white-space:nowrap}
+.topic-tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+.topic-tab[aria-selected=true]{color:#fff;background:#233548;box-shadow:inset 0 0 0 1px rgba(101,220,255,.16)}
+.topic-tab[aria-selected=true] span{color:var(--accent2)}
+.topic-tab span{color:#7997ad;font:800 .75rem ui-monospace,monospace;margin-right:9px}
+.topic-section{padding:4px 0 110px}
+.section-label{font-size:.74rem;letter-spacing:.16em;color:var(--accent2);font-weight:850}
+.section-heading{font-size:clamp(1.9rem,3.2vw,2.65rem);line-height:1.24;letter-spacing:-.025em;margin:10px 0 11px}
+.section-subtitle{color:var(--text2);font-size:.94rem;max-width:850px;margin:0 0 27px}
+.content-pane{border:1px solid var(--line);background:rgba(255,255,255,.019);border-radius:18px;padding:25px}
+.content-pane + .content-pane{margin-top:16px}
+.compact-note{font-size:.82rem;color:var(--muted);margin:13px 0 0}
+.table-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;text-align:left}
+th{color:#9fbed0;font-size:.76rem;font-weight:750;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
+th,td{padding:16px 16px;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+td{color:var(--text2)}
+td b,td strong{color:var(--text);font-weight:750}
+td small{color:var(--muted);font-size:.7rem;display:block;margin-top:5px}
+.table-id{color:var(--accent2);font:750 .74rem ui-monospace,monospace;white-space:nowrap;display:block;margin-bottom:5px}
+#brsTable th:nth-child(1){width:26%}#brsTable th:nth-child(2){width:39%}
+.text-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.text-block{border:1px solid var(--line);background:rgba(255,255,255,.021);border-radius:15px;padding:24px}
+.text-block h3,.content-pane h3{font-size:1.15rem;margin:0 0 10px}
+.text-block p,.content-pane p{color:var(--text2);font-size:.9rem;margin:0 0 10px}
+.text-block p:last-child,.content-pane p:last-child{margin-bottom:0}
+.ordered-steps{counter-reset:steps;list-style:none;padding:0;margin:0}
+.ordered-steps li{counter-increment:steps;display:grid;grid-template-columns:38px 1fr;gap:15px;padding:17px 0;border-bottom:1px solid var(--line)}
+.ordered-steps li:last-child{border:0;padding-bottom:0}
+.ordered-steps li::before{content:counter(steps,decimal-leading-zero);color:var(--accent2);font:800 .86rem ui-monospace,monospace;padding-top:3px}
+.ordered-steps strong{color:var(--text);display:block;font-size:.96rem}
+.ordered-steps p{margin:4px 0 0;color:var(--text2);font-size:.88rem}
+.small-label{color:var(--cyan);font:.76rem ui-monospace,monospace;letter-spacing:.04em;font-weight:800}
+.rule-line{border-left:3px solid var(--accent);padding:10px 16px;background:rgba(255,122,61,.05);color:#dfd1c7;margin:20px 0 0;font-size:.86rem;border-radius:0 7px 7px 0}
+.state-rail{display:flex;gap:7px;overflow-x:auto;padding:3px 1px 13px;margin:0 0 9px;scrollbar-width:thin}
+.state-option{min-width:108px;text-align:left;background:var(--surface);border:1px solid var(--line);color:#c4d3df;border-radius:10px;padding:11px 13px}
+.state-option small{display:block;font:.7rem ui-monospace,monospace;color:#8aa4b6}
+.state-option[aria-pressed=true]{border-color:var(--accent);background:rgba(255,122,61,.105);color:#fff}
+.state-description{background:rgba(101,220,255,.04);border:1px solid rgba(101,220,255,.18);border-radius:12px;padding:20px 22px}
+.state-description h3{margin:0 0 5px;font-size:1.07rem}.state-description p{margin:0;color:var(--text2);font-size:.88rem}
+.story-card{padding:23px 26px;border:1px solid rgba(255,122,61,.2);border-radius:15px;background:rgba(255,122,61,.055);margin-bottom:16px}
+.story-card h3{margin:0 0 9px;font-size:1.1rem}.story-card p{margin:0;font-size:.9rem;color:#e0d0c5}
+.topic-tools{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.filter-group{display:flex;gap:7px;flex-wrap:wrap}
+.filter{border:1px solid var(--line);color:#afc3d0;background:var(--surface);font-size:.78rem;padding:7px 10px;border-radius:8px}
+.filter[aria-pressed=true]{border-color:rgba(255,122,61,.5);background:rgba(255,122,61,.13);color:#ffe4d5}
+.search{border:1px solid var(--line);color:var(--text);background:var(--surface);border-radius:8px;padding:8px 12px;min-width:215px;font-size:.84rem}
+.search::placeholder{color:#75899a}
+.req-list{border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.req-item{border-bottom:1px solid var(--line);background:rgba(255,255,255,.012)}
+.req-item:last-child{border-bottom:0}
+.req-item summary{display:flex;align-items:center;gap:14px;padding:15px 17px;cursor:pointer;list-style:none}
+.req-item summary::-webkit-details-marker{display:none}
+.req-item[open]{background:rgba(255,255,255,.035)}
+.req-item summary:hover{background:rgba(255,255,255,.025)}
+.req-id{flex:0 0 72px;color:var(--accent2);font:750 .77rem ui-monospace,monospace}
+.req-main{flex:1;color:#e0ebf3;font-size:.88rem;line-height:1.68}
+.req-priority{font:800 .75rem ui-monospace,monospace;border:1px solid rgba(101,220,255,.2);padding:2px 7px;color:#a8def1;border-radius:5px}
+.req-priority.hot{color:#ffb18b;border-color:rgba(255,122,61,.33)}
+.req-chevron{color:var(--muted);font-size:1.4rem;line-height:1;transition:transform .2s}
+.req-item[open] .req-chevron{transform:rotate(180deg)}
+.req-detail{border-top:1px solid var(--line);margin:0 17px;padding:16px 0 21px 86px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px 25px}
+.req-detail>div span{display:block;color:var(--muted);font-size:.76rem}
+.req-detail>div b{display:block;color:#cddde8;font-size:.84rem;font-weight:550}
+.req-detail .wide{grid-column:1/-1}
+.accordion{border:1px solid var(--line);border-radius:12px;margin-top:19px;overflow:hidden}
+.accordion>summary{cursor:pointer;list-style:none;padding:16px 20px;font-size:.94rem;font-weight:750;background:rgba(255,255,255,.026)}
+.accordion>summary::-webkit-details-marker{display:none}
+.accordion>summary::after{content:"＋";float:right;color:var(--accent2)}
+.accordion[open]>summary::after{content:"－"}
+.accordion .table-scroll{padding:0 10px 10px}
+.page2-footer{display:flex;justify-content:space-between;gap:20px;align-items:center;border-top:1px solid var(--line);padding:20px 0 140px;margin-top:8px;font-size:.79rem;color:var(--muted)}
+.export-link{background:none;border:none;border-bottom:1px solid rgba(255,179,106,.55);color:var(--accent2);padding:0 0 2px;font-size:.81rem;white-space:nowrap}
+.export-link:disabled{color:var(--muted);border-color:var(--line)}
+#exportStatus{font-size:.77rem;color:#a9cbd7}
+@media(max-width:880px){.page2-top{grid-template-columns:1fr 270px;gap:22px}.text-grid{grid-template-columns:1fr}}
+@media(max-width:700px){
+ .page2-container{width:calc(100% - 28px)}.page2-top{padding-top:32px;grid-template-columns:1fr}
+ .page2-top h1{font-size:2.7rem}.hero-photo{max-width:460px;aspect-ratio:1.8}
+ .topic-tab{flex:0 0 auto}.content-pane{padding:14px}
+ th,td{padding:12px;min-width:120px}.req-detail{grid-template-columns:1fr 1fr;padding-left:0}
+ .req-id{flex-basis:60px}.req-item summary{gap:7px;padding:12px 10px}
+ .req-chevron{display:none}.topic-tools{align-items:stretch}.search{width:100%}
+ .dock{width:calc(100% - 30px);max-width:390px}.dock button{flex:1;padding:11px 8px;font-size:.85rem}
+ .page2-footer{display:block}.page2-footer .footer-actions{margin-top:12px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@media print{
+ body{height:auto!important;overflow:visible!important;background:white;color:#111}
+ .dock,.load-cover,.topic-nav,.page2-footer,.topic-tools{display:none!important}
+ .work[hidden]{display:none!important}
+ #work2{overflow:visible!important;height:auto!important;background:white}
+ .topic-section[hidden]{display:block!important;break-before:page}
+ .page2-container{width:95%}.hero-photo{display:none}
+ .content-pane,.text-block,.req-list,.req-item{background:white;border-color:#888}
+ .section-heading,.page2-top h1,.text-block h3{color:#111}
+ .page2-lead,.section-subtitle,.text-block p,td,.req-main,.content-pane p{color:#333}
+ .req-item{break-inside:avoid}.req-detail{display:grid!important}
+}
+</style>
+</head>
+<body>
+<div class="works">
+  <section class="work" id="work1" role="tabpanel" aria-label="作业一 原始完整设计">
+    <iframe title="作业一完整原版：所有图像及原有导航" id="originalFrame" loading="eager"></iframe>
+    <div class="load-cover" id="loadCover">
+      <div class="load-box">
+        <div class="symbol">EI</div>
+        <h2 id="loadTitle">正在恢复作业一完整原版</h2>
+        <p id="loadHint">直接读取已锁定的 GitHub 历史版本，不重画、不替换、不删减你原来的图片和排版。</p>
+        <div class="load-actions" id="loadFallback" hidden>
+          <button type="button" class="action primary" id="chooseOriginal">选择本地原始 index.html</button>
+          <button type="button" class="action" id="retryFetch">重新加载</button>
+          <input id="originalFileInput" type="file" accept=".html,text/html" hidden>
+        </div>
+        <p class="load-status" id="loadStatus">原始文件版本：8ab3738 · 完整保留内嵌图像</p>
+      </div>
+    </div>
+  </section>
+  <section class="work" id="work2" role="tabpanel" aria-label="作业二 BRS与StRS" hidden>
+    <div class="page2-container">
+      <header class="page2-top">
+        <div>
+          <div class="page2-kicker">COMPLEX SYSTEMS ENGINEERING · GROUP WORK 02</div>
+          <h1>从系统架构<br>到 <em>需求定义</em></h1>
+          <p class="page2-lead">承接作业一的“Mission → SoS → Vehicles → Systems → Subsystems → Modules”架构，以 <strong>V01 / U01 四足轮腿式机器人</strong>为分析对象，完成 BRS、ConOps、OpsCon、相关方与 StRS。</p>
+          <p class="page2-meta">具身智能组 · Duan xy · 15241604 &nbsp; / &nbsp; 2026.11.18 &nbsp; / &nbsp; 需求初稿</p>
+          <div class="file-tools">
+            <button class="export-link" type="button" id="exportOffline" disabled>↓ 导出包含原图的完整 index.html</button>
+            <span id="exportStatus" aria-live="polite">载入原版后即可导出</span>
+          </div>
+        </div>
+        <figure class="hero-photo" style="margin:0">
+          <img id="conceptImage" alt="复用第一次作业的原始机器人图片" hidden>
+          <div class="fallback"><strong>V01 / U01</strong><span>四足轮腿式机器人</span></div>
+          
+        </figure>
+      </header>
+
+      <nav class="topic-nav" aria-label="第二次作业五个部分" role="tablist">
+        <button class="topic-tab" type="button" role="tab" id="tab-brs" aria-controls="pane-brs" data-topic="brs" aria-selected="true"><span>01</span>BRS 业务需求</button>
+        <button class="topic-tab" type="button" role="tab" id="tab-conops" aria-controls="pane-conops" data-topic="conops" aria-selected="false"><span>02</span>ConOps 运营概念</button>
+        <button class="topic-tab" type="button" role="tab" id="tab-opscon" aria-controls="pane-opscon" data-topic="opscon" aria-selected="false"><span>03</span>OpsCon 运行概念</button>
+        <button class="topic-tab" type="button" role="tab" id="tab-actors" aria-controls="pane-actors" data-topic="actors" aria-selected="false"><span>04</span>相关方</button>
+        <button class="topic-tab" type="button" role="tab" id="tab-strs" aria-controls="pane-strs" data-topic="strs" aria-selected="false"><span>05</span>StRS 相关方需求</button>
+      </nav>
+
+      <section class="topic-section" id="pane-brs" role="tabpanel" aria-labelledby="tab-brs">
+        <div class="section-label">01 / BUSINESS REQUIREMENTS SPECIFICATION</div>
+        <h2 class="section-heading">BRS · 业务／任务需求</h2>
+        <p class="section-subtitle">为什么需要这套系统？从作业一 Mission 的任务价值出发，把业务目标和建议验收证据对应起来。下方 9 项均为课堂概念初稿，不代表已经完成实际试验。</p>
+        <div class="content-pane">
+          <div class="table-scroll">
+            <table id="brsTable" aria-label="BRS业务任务需求明细">
+              <thead><tr><th>业务目标 / 来源</th><th>业务／任务需求</th><th>建议成功证据</th></tr></thead>
+              <tbody><tr id="BRS-01"><td><span class="table-id">BRS-01</span><b>降低高风险现场人员暴露</b><small>M01 · S01</small></td><td>让无人平台先于人员获取现场基本信息，减少不必要的直接暴露。</td><td>可在指定演示场景完成远程先行观察，并提交记录。</td></tr>
+<tr id="BRS-02"><td><span class="table-id">BRS-02</span><b>形成可信的环境信息服务</b><small>M01 / M02 · S01 / S02</small></td><td>向任务管理方提供带时间、来源和确认状态的环境信息。</td><td>信息可检索、追溯，并能标记待人工核实的内容。</td></tr>
+<tr id="BRS-03"><td><span class="table-id">BRS-03</span><b>适应混合地面环境</b><small>V01 · S03</small></td><td>充分发挥轮腿融合平台的可通行性与稳定性。</td><td>按预设障碍和地面类型执行安全演示试验。</td></tr>
+<tr id="BRS-04"><td><span class="table-id">BRS-04</span><b>支持异构节点协作</b><small>SoS · S05</small></td><td>与空中观察、地面保障等节点实现状态与信息互通。</td><td>多类节点可完成信息交换，接口语义明确。</td></tr>
+<tr id="BRS-05"><td><span class="table-id">BRS-05</span><b>支持持续保障与快速周转</b><small>V01 · S04 / S06</small></td><td>通过状态监测、模块化配置和回收维护减少中断。</td><td>形成维护记录和安全更换流程。</td></tr>
+<tr id="BRS-06"><td><span class="table-id">BRS-06</span><b>在异常条件下保持安全可控</b><small>M06 · S07</small></td><td>出现异常时优先停止高风险动作，保持人工可接管及可回收。</td><td>通过断链、故障和急停模拟验证。</td></tr>
+<tr id="BRS-07"><td><span class="table-id">BRS-07</span><b>复用平台并适应不同任务</b><small>V01 · S04</small></td><td>采用统一载荷接口与经批准的任务配置，降低重复集成工作量。</td><td>完成两类非武装任务载荷配置切换示范。</td></tr>
+<tr id="BRS-08"><td><span class="table-id">BRS-08</span><b>落实人类授权与责任可追溯</b><small>S07</small></td><td>任务启动、模式切换、异常处置等重要操作有授权、有记录。</td><td>审核权限、操作轨迹及安全审查记录。</td></tr>
+<tr id="BRS-09"><td><span class="table-id">BRS-09</span><b>建立验证与持续改进闭环</b><small>S08</small></td><td>将需求、测试结果、问题、修订版本建立追溯关系。</td><td>每项优先级高的需求都能关联验收证据或待办。</td></tr></tbody>
+            </table>
+          </div>
+          <p class="compact-note">业务依据：M01–M06 的任务背景、V01 核心节点定位及 S01–S08 系统划分。BRS 编号用于 StRS 追溯。</p>
+        </div>
+        <div class="text-grid" style="margin-top:16px">
+          <article class="text-block"><h3>范围与边界</h3><p>本页聚焦高风险环境先行感知、受控协作、机动与保障、安全退出和工程验证。保留作业一的完整背景资料，但不推导任何武器使用或具体攻击流程。</p></article>
+          <article class="text-block"><h3>业务验收思路</h3><p>以安全演示、接口检查、故障模拟、日志审查和人工复核为主要证据。具体响应时间、越障性能等量化指标应在小组评审后确定。</p></article>
+        </div>
+      </section>
+
+      <section class="topic-section" id="pane-conops" role="tabpanel" aria-labelledby="tab-conops" hidden>
+        <div class="section-label">02 / CONCEPT OF OPERATIONS</div>
+        <h2 class="section-heading">ConOps · 运营概念</h2>
+        <p class="section-subtitle">从使用方视角描述“谁来用、在何种场景下用、业务结果是什么”，不等同于技术层面的详细运行步骤。</p>
+        <article class="story-card">
+          <h3>任务示例：复杂现场的外围环境勘察</h3>
+          <p>在废墟、受限通道等人员不宜直接进入的环境，任务方授权 V01 先行采集环境观察信息；协同平台提供补充视角。操作员负责远程控制，分析人员核验重要信息；当通信、设备状态或现场安全条件异常时，平台按照安全优先原则退出。</p>
+        </article>
+        <div class="text-grid">
+          <article class="text-block"><span class="small-label">USERS / 使用主体</span><h3>多角色参与</h3><p>任务需求方、任务负责人、远程操作员、安全负责人、信息分析人员、维护保障人员和测试人员共同构成使用与治理链。</p></article>
+          <article class="text-block"><span class="small-label">VALUE / 预期价值</span><h3>降低暴露、形成可追溯的信息</h3><p>让无人平台先于人员获取初步现场信息；向人清晰展示来源、时间和待核验内容，并为任务复盘留下记录。</p></article>
+        </div>
+        <div class="content-pane" style="margin-top:16px">
+          <h3>运营生命周期</h3>
+          <ol class="ordered-steps">
+            <li><div><strong>任务提出与授权</strong><p>确认用途、参与者、现场边界、数据权限与退出条件。</p></div></li>
+            <li><div><strong>准备与配置</strong><p>检查 V01 状态、能源、传感器、通信以及非武装任务载荷。</p></div></li>
+            <li><div><strong>执行与信息复核</strong><p>操作员受控运行，关联外部观察数据，分析人员复核重要结论。</p></div></li>
+            <li><div><strong>异常处理与安全回收</strong><p>遇到断链、健康异常或安全风险，优先进入经评审的保守模式。</p></div></li>
+            <li><div><strong>归档与改进</strong><p>回收设备、维护检查、整理任务日志和需求验证证据。</p></div></li>
+          </ol>
+        </div>
+        <p class="rule-line">ConOps 的核心边界：任务在授权范围内执行；信息结论由人审核；出现重大异常时安全优先。</p>
+      </section>
+
+      <section class="topic-section" id="pane-opscon" role="tabpanel" aria-labelledby="tab-opscon" hidden>
+        <div class="section-label">03 / OPERATIONAL CONCEPT</div>
+        <h2 class="section-heading">OpsCon · 运行概念</h2>
+        <p class="section-subtitle">把运营场景转换成系统可描述的运行状态与交互过程，明确输入、主要行为、异常分支和退出条件。点击状态可查看说明。</p>
+        <div class="content-pane">
+          <div class="state-rail" role="group" aria-label="运行状态">
+            <button class="state-option" type="button" data-state="idle" aria-pressed="false"><small>ST-00</small>待命</button>
+            <button class="state-option" type="button" data-state="check" aria-pressed="true"><small>ST-01</small>自检授权</button>
+            <button class="state-option" type="button" data-state="deploy" aria-pressed="false"><small>ST-02</small>部署</button>
+            <button class="state-option" type="button" data-state="operate" aria-pressed="false"><small>ST-03</small>受控运行</button>
+            <button class="state-option" type="button" data-state="safe" aria-pressed="false"><small>ST-04</small>安全模式</button>
+            <button class="state-option" type="button" data-state="return" aria-pressed="false"><small>ST-05</small>回收</button>
+            <button class="state-option" type="button" data-state="archive" aria-pressed="false"><small>ST-06</small>归档</button>
+          </div>
+          <div class="state-description" aria-live="polite">
+            <h3 id="stateTitle">ST-01 · 自检授权</h3>
+            <p id="stateDetail">核验任务授权、操作员权限、传感器、通信、能源与现场安全条件；不符合要求时维持待命。</p>
+          </div>
+          <p class="compact-note">逻辑说明：ST-03 可在异常时进入 ST-04；从安全模式恢复需重新经过适当的授权与健康检查。</p>
+        </div>
+        <div class="content-pane" style="margin-top:16px">
+          <h3>关键交互与运行产物</h3>
+          <div class="table-scroll">
+            <table aria-label="OpsCon输入输出表"><thead><tr><th>过程</th><th>输入／触发</th><th>系统行为</th><th>输出与责任</th></tr></thead>
+            <tbody>
+              <tr><td>任务门禁</td><td>任务配置、授权身份</td><td>检查权限、健康及现场边界</td><td>审查记录；负责人／安全负责人确认</td></tr>
+              <tr><td>环境观察</td><td>多源传感器数据</td><td>标注时间、来源及不确定性</td><td>观察摘要；由分析人员复核</td></tr>
+              <tr><td>受控协同</td><td>异构节点数据</td><td>认证来源并限制对本机控制的影响</td><td>节点状态与接口日志</td></tr>
+              <tr><td>异常退化</td><td>断链、急停、健康异常</td><td>执行安全策略并要求人工确认</td><td>异常与处置记录；安全优先</td></tr>
+              <tr><td>回收复盘</td><td>任务完成或退出决定</td><td>维护检查、版本记录、日志导出</td><td>任务报告及待改进事项</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <section class="topic-section" id="pane-actors" role="tabpanel" aria-labelledby="tab-actors" hidden>
+        <div class="section-label">04 / STAKEHOLDER IDENTIFICATION</div>
+        <h2 class="section-heading">相关方列表</h2>
+        <p class="section-subtitle">相关方不止操作机器人的人员：任务、信息、安全、保障、接口、研发、环境受影响方都可能提出不同要求。</p>
+        <div class="content-pane"><div class="table-scroll"><table aria-label="相关方列表"><thead>
+          <tr><th>编号</th><th>相关方</th><th>责任</th><th>主要关注</th><th>影响程度*</th></tr>
+          </thead><tbody><tr id="SH-01"><td><span class="table-id">SH-01</span></td><td><strong>任务需求方</strong></td><td>提出使用目标、范围、验收规则</td><td>任务价值、效果与交付边界</td><td>高</td></tr>
+<tr id="SH-02"><td><span class="table-id">SH-02</span></td><td><strong>任务负责人／指挥席</strong></td><td>批准任务、分配角色、处理升级事项</td><td>状态清晰、责任明确、可停止任务</td><td>高</td></tr>
+<tr id="SH-03"><td><span class="table-id">SH-03</span></td><td><strong>远程操作员</strong></td><td>执行遥控、监视与人工接管</td><td>操作负荷、实时状态、清晰告警</td><td>高</td></tr>
+<tr id="SH-04"><td><span class="table-id">SH-04</span></td><td><strong>现场安全负责人</strong></td><td>划定安全边界、审查异常处置</td><td>失效安全、急停、现场人员保护</td><td>高</td></tr>
+<tr id="SH-05"><td><span class="table-id">SH-05</span></td><td><strong>维护保障人员</strong></td><td>检查、更换模块、回收与检修</td><td>易维护、故障定位、能源健康</td><td>中</td></tr>
+<tr id="SH-06"><td><span class="table-id">SH-06</span></td><td><strong>异构平台协同团队</strong></td><td>提供外部节点数据和接口</td><td>互操作、数据格式与隔离机制</td><td>中</td></tr>
+<tr id="SH-07"><td><span class="table-id">SH-07</span></td><td><strong>信息分析与记录人员</strong></td><td>审核现场信息和任务记录</td><td>时间戳、可信度、可导出记录</td><td>中</td></tr>
+<tr id="SH-08"><td><span class="table-id">SH-08</span></td><td><strong>信息安全管理员</strong></td><td>配置权限与审计安全事件</td><td>最小权限、认证、审计</td><td>高</td></tr>
+<tr id="SH-09"><td><span class="table-id">SH-09</span></td><td><strong>研发／测试评估团队</strong></td><td>集成、验证、回归测试</td><td>可测量、可追溯、可复现</td><td>高</td></tr>
+<tr id="SH-10"><td><span class="table-id">SH-10</span></td><td><strong>现场人员及受影响方</strong></td><td>处于任务环境或近旁</td><td>人身安全、隐私与清晰的运行边界</td><td>中</td></tr></tbody></table></div>
+          <p class="compact-note">* “影响程度”为本页的课堂分析建议排序，不代表实际组织权限或访谈结果。</p>
+        </div>
+        <div class="text-grid" style="margin-top:16px">
+          <article class="text-block"><h3>直接相关方的需求焦点</h3><p>操作员：界面和人工控制权；任务负责人：目标与授权；分析人员：信息来源和可信状态。</p></article>
+          <article class="text-block"><h3>间接相关方的需求焦点</h3><p>现场安全：异常停止及人员保护；维护团队：可维护性；协同团队：接口和认证；测试团队：验证与追溯。</p></article>
+        </div>
+      </section>
+
+      <section class="topic-section" id="pane-strs" role="tabpanel" aria-labelledby="tab-strs" hidden>
+        <div class="section-label">05 / STAKEHOLDER REQUIREMENTS SPECIFICATION</div>
+        <h2 class="section-heading">StRS · 相关方需求</h2>
+        <p class="section-subtitle">依据 BRS 和相关方关注点，将需求写成“系统应……”的可核验条目。为减少页面杂乱，每条默认只显示需求正文；展开后再看提出方、BRS 来源及验证方式。</p>
+        <div class="topic-tools">
+          <div class="filter-group" role="group" aria-label="需求类别筛选">
+            <button class="filter" type="button" data-filter="全部" aria-pressed="true">全部</button>
+            <button class="filter" type="button" data-filter="控制与安全" aria-pressed="false">控制安全</button>
+            <button class="filter" type="button" data-filter="感知与信息" aria-pressed="false">感知信息</button>
+            <button class="filter" type="button" data-filter="协同与通信" aria-pressed="false">协同通信</button>
+            <button class="filter" type="button" data-filter="保障与维护" aria-pressed="false">保障维护</button>
+            <button class="filter" type="button" data-filter="数据与验证" aria-pressed="false">验证审计</button>
+          </div>
+          <input id="reqSearch" class="search" type="search" placeholder="搜索编号或关键词…" aria-label="搜索StRS需求">
+        </div>
+        <div class="req-list" id="reqList"><details class="req-item" id="STR-01" data-category="控制与安全" data-terms="str-01 控制与安全 系统应在每次任务开始前核验任务授权、操作者角色及任务配置；核验未通过时不得进入执行状态。 sh-01,sh-02,sh-08 brs-08 演示：未授权账户无法启动任务；保留审计记录。"><summary><span class="req-id">STR-01</span><span class="req-main">系统应在每次任务开始前核验任务授权、操作者角色及任务配置；核验未通过时不得进入执行状态。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>控制与安全</b></div><div><span>提出／相关方</span><b>SH-01, SH-02, SH-08</b></div><div><span>上层业务需求</span><b>BRS-08</b></div><div class="wide"><span>验证方式与证据</span><b>演示：未授权账户无法启动任务；保留审计记录。</b></div></div></details>
+<details class="req-item" id="STR-02" data-category="感知与信息" data-terms="str-02 感知与信息 系统应向操作员显示在线状态、控制模式、能源状态、通信状态及最近一次更新时刻。 sh-03,sh-07 brs-02 演示：模拟状态变化，界面字段正确更新。"><summary><span class="req-id">STR-02</span><span class="req-main">系统应向操作员显示在线状态、控制模式、能源状态、通信状态及最近一次更新时刻。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>感知与信息</b></div><div><span>提出／相关方</span><b>SH-03, SH-07</b></div><div><span>上层业务需求</span><b>BRS-02</b></div><div class="wide"><span>验证方式与证据</span><b>演示：模拟状态变化，界面字段正确更新。</b></div></div></details>
+<details class="req-item" id="STR-03" data-category="控制与安全" data-terms="str-03 控制与安全 系统应提供人工接管入口，且人工停机或人工接管指令应优先于一般自主任务指令。 sh-02,sh-03,sh-04 brs-06,brs-08 测试：构造自动任务与接管请求并发场景。"><summary><span class="req-id">STR-03</span><span class="req-main">系统应提供人工接管入口，且人工停机或人工接管指令应优先于一般自主任务指令。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>控制与安全</b></div><div><span>提出／相关方</span><b>SH-02, SH-03, SH-04</b></div><div><span>上层业务需求</span><b>BRS-06, BRS-08</b></div><div class="wide"><span>验证方式与证据</span><b>测试：构造自动任务与接管请求并发场景。</b></div></div></details>
+<details class="req-item" id="STR-04" data-category="控制与安全" data-terms="str-04 控制与安全 系统应在通信超时或控制状态不可确认时，进入经评审的保守安全模式，并向操作端显示原因。 sh-03,sh-04 brs-06 测试：注入断链；检查动作、告警及状态记录。"><summary><span class="req-id">STR-04</span><span class="req-main">系统应在通信超时或控制状态不可确认时，进入经评审的保守安全模式，并向操作端显示原因。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>控制与安全</b></div><div><span>提出／相关方</span><b>SH-03, SH-04</b></div><div><span>上层业务需求</span><b>BRS-06</b></div><div class="wide"><span>验证方式与证据</span><b>测试：注入断链；检查动作、告警及状态记录。</b></div></div></details>
+<details class="req-item" id="STR-05" data-category="控制与安全" data-terms="str-05 控制与安全 系统应支持可辨识的急停操作，并在恢复运行前要求重新确认安全状态。 sh-03,sh-04 brs-06,brs-08 演示：触发急停、确认安全后复位。"><summary><span class="req-id">STR-05</span><span class="req-main">系统应支持可辨识的急停操作，并在恢复运行前要求重新确认安全状态。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>控制与安全</b></div><div><span>提出／相关方</span><b>SH-03, SH-04</b></div><div><span>上层业务需求</span><b>BRS-06, BRS-08</b></div><div class="wide"><span>验证方式与证据</span><b>演示：触发急停、确认安全后复位。</b></div></div></details>
+<details class="req-item" id="STR-06" data-category="控制与安全" data-terms="str-06 控制与安全 系统应显示当前轮式／轮腿姿态模式，并限制未经安全检查的模式切换。 sh-03,sh-09 brs-03 试验：在预设不适合切换的条件下阻止切换。"><summary><span class="req-id">STR-06</span><span class="req-main">系统应显示当前轮式／轮腿姿态模式，并限制未经安全检查的模式切换。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>控制与安全</b></div><div><span>提出／相关方</span><b>SH-03, SH-09</b></div><div><span>上层业务需求</span><b>BRS-03</b></div><div class="wide"><span>验证方式与证据</span><b>试验：在预设不适合切换的条件下阻止切换。</b></div></div></details>
+<details class="req-item" id="STR-07" data-category="感知与信息" data-terms="str-07 感知与信息 系统应为采集的环境观察数据关联时间、传感器来源、任务标识和可用的位置信息。 sh-07,sh-09 brs-01,brs-02 检查：抽取数据样本核对字段完整性。"><summary><span class="req-id">STR-07</span><span class="req-main">系统应为采集的环境观察数据关联时间、传感器来源、任务标识和可用的位置信息。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>感知与信息</b></div><div><span>提出／相关方</span><b>SH-07, SH-09</b></div><div><span>上层业务需求</span><b>BRS-01, BRS-02</b></div><div class="wide"><span>验证方式与证据</span><b>检查：抽取数据样本核对字段完整性。</b></div></div></details>
+<details class="req-item" id="STR-08" data-category="感知与信息" data-terms="str-08 感知与信息 系统应将不确定的环境异常作为待核验线索展示，不得将未核验的识别结果表述为确定结论。 sh-02,sh-07,sh-10 brs-01,brs-02 演示：模拟低置信线索并检查提示文案。"><summary><span class="req-id">STR-08</span><span class="req-main">系统应将不确定的环境异常作为待核验线索展示，不得将未核验的识别结果表述为确定结论。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>感知与信息</b></div><div><span>提出／相关方</span><b>SH-02, SH-07, SH-10</b></div><div><span>上层业务需求</span><b>BRS-01, BRS-02</b></div><div class="wide"><span>验证方式与证据</span><b>演示：模拟低置信线索并检查提示文案。</b></div></div></details>
+<details class="req-item" id="STR-09" data-category="感知与信息" data-terms="str-09 感知与信息 系统应允许授权用户导出已采集的环境观察摘要，并明确区分自动生成内容与人工确认内容。 sh-01,sh-07 brs-01,brs-02 演示：导出任务摘要并核对确认标记。"><summary><span class="req-id">STR-09</span><span class="req-main">系统应允许授权用户导出已采集的环境观察摘要，并明确区分自动生成内容与人工确认内容。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>感知与信息</b></div><div><span>提出／相关方</span><b>SH-01, SH-07</b></div><div><span>上层业务需求</span><b>BRS-01, BRS-02</b></div><div class="wide"><span>验证方式与证据</span><b>演示：导出任务摘要并核对确认标记。</b></div></div></details>
+<details class="req-item" id="STR-10" data-category="协同与通信" data-terms="str-10 协同与通信 系统应通过受控接口接收其他平台的状态与观察信息，外部消息不得直接绕过本机授权控制。 sh-06,sh-08 brs-04 接口试验：正常报文可读；未经授权控制消息被拒绝。"><summary><span class="req-id">STR-10</span><span class="req-main">系统应通过受控接口接收其他平台的状态与观察信息，外部消息不得直接绕过本机授权控制。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>协同与通信</b></div><div><span>提出／相关方</span><b>SH-06, SH-08</b></div><div><span>上层业务需求</span><b>BRS-04</b></div><div class="wide"><span>验证方式与证据</span><b>接口试验：正常报文可读；未经授权控制消息被拒绝。</b></div></div></details>
+<details class="req-item" id="STR-11" data-category="协同与通信" data-terms="str-11 协同与通信 系统应在展示共享信息时保留来源节点、时间戳及数据有效性状态。 sh-06,sh-07 brs-02,brs-04 检查：多节点样例数据字段齐全。"><summary><span class="req-id">STR-11</span><span class="req-main">系统应在展示共享信息时保留来源节点、时间戳及数据有效性状态。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>协同与通信</b></div><div><span>提出／相关方</span><b>SH-06, SH-07</b></div><div><span>上层业务需求</span><b>BRS-02, BRS-04</b></div><div class="wide"><span>验证方式与证据</span><b>检查：多节点样例数据字段齐全。</b></div></div></details>
+<details class="req-item" id="STR-12" data-category="协同与通信" data-terms="str-12 协同与通信 系统应对控制通信会话进行身份认证，并可撤销失效或不再授权的会话。 sh-03,sh-08 brs-04,brs-08 测试：使用无效身份和已撤销会话。"><summary><span class="req-id">STR-12</span><span class="req-main">系统应对控制通信会话进行身份认证，并可撤销失效或不再授权的会话。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>协同与通信</b></div><div><span>提出／相关方</span><b>SH-03, SH-08</b></div><div><span>上层业务需求</span><b>BRS-04, BRS-08</b></div><div class="wide"><span>验证方式与证据</span><b>测试：使用无效身份和已撤销会话。</b></div></div></details>
+<details class="req-item" id="STR-13" data-category="协同与通信" data-terms="str-13 协同与通信 系统应记录通信中断与恢复事件，并在恢复后向操作员提示状态同步结果。 sh-03,sh-06 brs-04,brs-06 测试：模拟断链重连、检查事件顺序。"><summary><span class="req-id">STR-13</span><span class="req-main">系统应记录通信中断与恢复事件，并在恢复后向操作员提示状态同步结果。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>协同与通信</b></div><div><span>提出／相关方</span><b>SH-03, SH-06</b></div><div><span>上层业务需求</span><b>BRS-04, BRS-06</b></div><div class="wide"><span>验证方式与证据</span><b>测试：模拟断链重连、检查事件顺序。</b></div></div></details>
+<details class="req-item" id="STR-14" data-category="保障与维护" data-terms="str-14 保障与维护 系统应持续监测电源与温度健康状态，并在越过经评审的安全阈值时发出告警。 sh-03,sh-05 brs-05 测试：注入阈值边界值并检查告警。"><summary><span class="req-id">STR-14</span><span class="req-main">系统应持续监测电源与温度健康状态，并在越过经评审的安全阈值时发出告警。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>保障与维护</b></div><div><span>提出／相关方</span><b>SH-03, SH-05</b></div><div><span>上层业务需求</span><b>BRS-05</b></div><div class="wide"><span>验证方式与证据</span><b>测试：注入阈值边界值并检查告警。</b></div></div></details>
+<details class="req-item" id="STR-15" data-category="保障与维护" data-terms="str-15 保障与维护 系统应在任务载荷拆装或更换前提供安全隔离与确认步骤，并记录配置版本。 sh-05,sh-09 brs-05,brs-07 演示：执行两种非武装载荷配置的安全更换。"><summary><span class="req-id">STR-15</span><span class="req-main">系统应在任务载荷拆装或更换前提供安全隔离与确认步骤，并记录配置版本。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>保障与维护</b></div><div><span>提出／相关方</span><b>SH-05, SH-09</b></div><div><span>上层业务需求</span><b>BRS-05, BRS-07</b></div><div class="wide"><span>验证方式与证据</span><b>演示：执行两种非武装载荷配置的安全更换。</b></div></div></details>
+<details class="req-item" id="STR-16" data-category="保障与维护" data-terms="str-16 保障与维护 系统应提供故障代码、维护记录以及部件状态查询能力。 sh-05,sh-09 brs-05,brs-09 检查：故障演示后可检索对应记录。"><summary><span class="req-id">STR-16</span><span class="req-main">系统应提供故障代码、维护记录以及部件状态查询能力。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>保障与维护</b></div><div><span>提出／相关方</span><b>SH-05, SH-09</b></div><div><span>上层业务需求</span><b>BRS-05, BRS-09</b></div><div class="wide"><span>验证方式与证据</span><b>检查：故障演示后可检索对应记录。</b></div></div></details>
+<details class="req-item" id="STR-17" data-category="数据与验证" data-terms="str-17 数据与验证 系统应在任务结束时生成包含任务标识、状态变化、异常事件和人工处理记录的可导出日志。 sh-01,sh-07,sh-09 brs-09 检查：任务日志字段完整、可读取。"><summary><span class="req-id">STR-17</span><span class="req-main">系统应在任务结束时生成包含任务标识、状态变化、异常事件和人工处理记录的可导出日志。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>数据与验证</b></div><div><span>提出／相关方</span><b>SH-01, SH-07, SH-09</b></div><div><span>上层业务需求</span><b>BRS-09</b></div><div class="wide"><span>验证方式与证据</span><b>检查：任务日志字段完整、可读取。</b></div></div></details>
+<details class="req-item" id="STR-18" data-category="数据与验证" data-terms="str-18 数据与验证 系统应按角色实施最小权限管理，并记录重要权限变更。 sh-02,sh-08 brs-08 测试：不同角色执行权限边界测试。"><summary><span class="req-id">STR-18</span><span class="req-main">系统应按角色实施最小权限管理，并记录重要权限变更。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>数据与验证</b></div><div><span>提出／相关方</span><b>SH-02, SH-08</b></div><div><span>上层业务需求</span><b>BRS-08</b></div><div class="wide"><span>验证方式与证据</span><b>测试：不同角色执行权限边界测试。</b></div></div></details>
+<details class="req-item" id="STR-19" data-category="数据与验证" data-terms="str-19 数据与验证 系统应对任务开始、控制权转移、安全模式切换及恢复操作生成可追溯审计事件。 sh-02,sh-04,sh-08 brs-08 检查：事件包含操作者、时间、动作和结果。"><summary><span class="req-id">STR-19</span><span class="req-main">系统应对任务开始、控制权转移、安全模式切换及恢复操作生成可追溯审计事件。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>数据与验证</b></div><div><span>提出／相关方</span><b>SH-02, SH-04, SH-08</b></div><div><span>上层业务需求</span><b>BRS-08</b></div><div class="wide"><span>验证方式与证据</span><b>检查：事件包含操作者、时间、动作和结果。</b></div></div></details>
+<details class="req-item" id="STR-20" data-category="数据与验证" data-terms="str-20 数据与验证 系统应保留可识别的软件／配置版本，并支持经审核的升级、验证和回退流程。 sh-05,sh-09 brs-07,brs-09 演示：版本查询及受控回退流程。"><summary><span class="req-id">STR-20</span><span class="req-main">系统应保留可识别的软件／配置版本，并支持经审核的升级、验证和回退流程。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>数据与验证</b></div><div><span>提出／相关方</span><b>SH-05, SH-09</b></div><div><span>上层业务需求</span><b>BRS-07, BRS-09</b></div><div class="wide"><span>验证方式与证据</span><b>演示：版本查询及受控回退流程。</b></div></div></details>
+<details class="req-item" id="STR-21" data-category="控制与安全" data-terms="str-21 控制与安全 系统应在部署前要求确认现场隔离范围与人员安全条件；未确认时不得启动机动操作。 sh-04,sh-10 brs-01,brs-03,brs-06 演示：省略现场确认步骤时无法开始运动。"><summary><span class="req-id">STR-21</span><span class="req-main">系统应在部署前要求确认现场隔离范围与人员安全条件；未确认时不得启动机动操作。</span><span class="req-priority hot">P0</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>控制与安全</b></div><div><span>提出／相关方</span><b>SH-04, SH-10</b></div><div><span>上层业务需求</span><b>BRS-01, BRS-03, BRS-06</b></div><div class="wide"><span>验证方式与证据</span><b>演示：省略现场确认步骤时无法开始运动。</b></div></div></details>
+<details class="req-item" id="STR-22" data-category="数据与验证" data-terms="str-22 数据与验证 研发与评估人员应能将每项高优先级需求关联到测试用例、结果与问题记录。 sh-01,sh-09 brs-03,brs-08,brs-09 审查：需求—用例—结果—问题双向追溯。"><summary><span class="req-id">STR-22</span><span class="req-main">研发与评估人员应能将每项高优先级需求关联到测试用例、结果与问题记录。</span><span class="req-priority ">P1</span><span class="req-chevron" aria-hidden="true">⌄</span></summary><div class="req-detail"><div><span>需求类别</span><b>数据与验证</b></div><div><span>提出／相关方</span><b>SH-01, SH-09</b></div><div><span>上层业务需求</span><b>BRS-03, BRS-08, BRS-09</b></div><div class="wide"><span>验证方式与证据</span><b>审查：需求—用例—结果—问题双向追溯。</b></div></div></details></div>
+        <p class="compact-note" id="reqCount" aria-live="polite">当前显示 22 / 22 项 · P0 优先保障安全；P1 后续细化。</p>
+        <details class="accordion">
+          <summary>BRS → StRS 追溯索引（9 项业务目标）</summary>
+          <div class="table-scroll"><table aria-label="需求双向追溯索引"><thead>
+            <tr><th>业务编号</th><th>业务目标</th><th>对应 StRS</th></tr></thead>
+            <tbody><tr><td><span class="table-id">BRS-01</span></td><td>降低高风险现场人员暴露</td><td>STR-07 · STR-08 · STR-09 · STR-21</td></tr>
+<tr><td><span class="table-id">BRS-02</span></td><td>形成可信的环境信息服务</td><td>STR-02 · STR-07 · STR-08 · STR-09 · STR-11</td></tr>
+<tr><td><span class="table-id">BRS-03</span></td><td>适应混合地面环境</td><td>STR-06 · STR-21 · STR-22</td></tr>
+<tr><td><span class="table-id">BRS-04</span></td><td>支持异构节点协作</td><td>STR-10 · STR-11 · STR-12 · STR-13</td></tr>
+<tr><td><span class="table-id">BRS-05</span></td><td>支持持续保障与快速周转</td><td>STR-14 · STR-15 · STR-16</td></tr>
+<tr><td><span class="table-id">BRS-06</span></td><td>在异常条件下保持安全可控</td><td>STR-03 · STR-04 · STR-05 · STR-13 · STR-21</td></tr>
+<tr><td><span class="table-id">BRS-07</span></td><td>复用平台并适应不同任务</td><td>STR-15 · STR-20</td></tr>
+<tr><td><span class="table-id">BRS-08</span></td><td>落实人类授权与责任可追溯</td><td>STR-01 · STR-03 · STR-05 · STR-12 · STR-18 · STR-19 · STR-22</td></tr>
+<tr><td><span class="table-id">BRS-09</span></td><td>建立验证与持续改进闭环</td><td>STR-16 · STR-17 · STR-20 · STR-22</td></tr></tbody></table></div>
+        </details>
+        
+      </section>
+      
+    </div>
+  </section>
+</div>
+
+<nav class="dock" aria-label="作业切换">
+  <button type="button" data-work="one" aria-pressed="true"><span class="dock-no">01</span>作业一 · 原有设计</button>
+  <button type="button" data-work="two" aria-pressed="false"><span class="dock-no">02</span>作业二 · 需求定义</button>
+</nav>
+
+<!-- 将原版 index.html 进行 Base64 内嵌的预留区域。浏览器一键导出后此处自动加入原 HTML（包括原来的所有 Base64 图像）。 -->
+<script id="embeddedOriginal" type="application/octet-stream"></script>
+
+<script>
+/* Single HTML, two workspaces. Work 1 is the unchanged historical source. Offline export embeds
+   that source as Base64, including all its original pictures, so the final downloaded index.html
+   does not depend on a second HTML file or on internet access. */
+const ORIGINAL_PINNED_URL =
+  'https://raw.githubusercontent.com/duanxy-666/homework01_complex-systems-engineering/8ab3738a4481cd8c8f0b81da47d5b1a66a150b5e/index.html';
+let originalHtml = '';
+const iframe = document.getElementById('originalFrame');
+const loadCover = document.getElementById('loadCover');
+const loadTitle = document.getElementById('loadTitle');
+const loadHint = document.getElementById('loadHint');
+const loadFallback = document.getElementById('loadFallback');
+const loadStatus = document.getElementById('loadStatus');
+const exportButton = document.getElementById('exportOffline');
+const exportStatus = document.getElementById('exportStatus');
+
+function showWork(which, updateHash=true) {
+  const isTwo = which === 'two';
+  document.getElementById('work1').hidden = isTwo;
+  document.getElementById('work2').hidden = !isTwo;
+  document.querySelectorAll('.dock button').forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.work===which)));
+  if(updateHash) history.replaceState(null,'',isTwo?'#homework02':'#homework01');
+  document.title = (isTwo?'小组作业二｜需求定义':'小组作业一｜完整原版') + ' · 具身智能组';
+}
+document.querySelectorAll('.dock button').forEach(btn=>btn.addEventListener('click',()=>showWork(btn.dataset.work)));
+window.addEventListener('hashchange',()=>showWork(location.hash==='#homework02'?'two':'one',false));
+
+const topicTabs = [...document.querySelectorAll('.topic-tab')];
+function showTopic(id){
+  topicTabs.forEach(btn => {
+    const yes=btn.dataset.topic===id;
+    btn.setAttribute('aria-selected',String(yes));
+    btn.tabIndex=yes?0:-1;
+    document.getElementById('pane-'+btn.dataset.topic).hidden=!yes;
+  });
+  document.getElementById('work2').scrollTo({top:0,behavior:'instant'});
+}
+topicTabs.forEach((btn,i)=>{
+  btn.addEventListener('click',()=>showTopic(btn.dataset.topic));
+  btn.addEventListener('keydown',(e)=>{
+    if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+    e.preventDefault();
+    const next=topicTabs[(i+(e.key==='ArrowRight'?1:-1)+topicTabs.length)%topicTabs.length];
+    showTopic(next.dataset.topic);next.focus();
+  });
+});
+const states={
+ idle:['ST-00 · 待命','平台处于安全待机，不执行机动；只接收经过批准的任务准备请求。'],
+ check:['ST-01 · 自检授权','核验任务授权、操作员权限、传感器、通信、能源与现场安全条件；不符合要求时维持待命。'],
+ deploy:['ST-02 · 部署','确认现场隔离、受控通信和模式配置；未经确认不得开始机动。'],
+ operate:['ST-03 · 受控运行','在批准范围内开展环境观察和信息交换，显示健康状态，允许人工随时接管与停止。'],
+ safe:['ST-04 · 安全模式','断链、急停或健康异常触发保守退化，限制高风险动作，告警并保留事件记录。'],
+ return:['ST-05 · 回收','按授权的退出决定，停止运行并进行安全回收和维护检查。'],
+ archive:['ST-06 · 归档','保存观察摘要、任务日志、配置版本和问题清单，建立需求与验证材料的关联。']
+};
+document.querySelectorAll('.state-option').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.state-option').forEach(x=>x.setAttribute('aria-pressed',String(x===btn)));
+  document.getElementById('stateTitle').textContent=states[btn.dataset.state][0];
+  document.getElementById('stateDetail').textContent=states[btn.dataset.state][1];
+}));
+let filterCategory='全部';
+const searchInput=document.getElementById('reqSearch');
+const requirements=[...document.querySelectorAll('.req-item')];
+function filterReq(){
+  const q=searchInput.value.trim().toLowerCase();
+  let n=0;
+  requirements.forEach(el=>{
+    const show=(filterCategory==='全部'||el.dataset.category===filterCategory)&&el.dataset.terms.includes(q);
+    el.hidden=!show;if(show)n++;
+  });
+  document.getElementById('reqCount').textContent=`当前显示 ${n} / ${requirements.length} 项 · P0 为优先项，P1 为细化项。`;
+}
+searchInput.addEventListener('input',filterReq);
+document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{
+  filterCategory=btn.dataset.filter;
+  document.querySelectorAll('.filter').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+  filterReq();
+}));
+function b64ToUtf8(b64){
+  const binary=atob(b64);
+  const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+function utf8ToB64(text){
+  const bytes=new TextEncoder().encode(text);
+  const parts=[];
+  for(let i=0;i<bytes.length;i+=32768){
+    let s='';
+    const end=Math.min(i+32768,bytes.length);
+    for(let j=i;j<end;j++)s+=String.fromCharCode(bytes[j]);
+    parts.push(s);
+  }
+  return btoa(parts.join(''));
+}
+function verifyOriginal(html){
+  if(!/<!doctype html/i.test(html)||!/<html[\s>]/i.test(html)||!/<\/html>/i.test(html))throw Error('文件不是完整的 HTML');
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  if(!doc.querySelector('#sec-mission')||!doc.querySelector('#sec-sos')||!doc.querySelector('#sec-vehicles')||!doc.querySelector('#sec-systems')){
+    throw Error('没有识别到原作业的 Mission / SoS / Vehicles / Systems 章节，请选择仓库原来的 index.html。');
+  }
+  return doc;
+}
+function useOriginal(html,via){
+  const parsed=verifyOriginal(html);
+  originalHtml=html; // Preserve original bytes as UTF-8 text; images are data: URIs in the source.
+  iframe.srcdoc=html;
+  const heroImage=parsed.querySelector('.hero-visual img');
+  const heroSrc=heroImage?.getAttribute('src')||'';
+  const img=document.getElementById('conceptImage');
+  if(heroSrc){
+    img.src=heroSrc;
+    img.hidden=false;
+  }
+  loadCover.hidden=true;
+  exportButton.disabled=false;
+  exportStatus.textContent=via==='embedded'?'已包含原始图片，可再次导出':'已载入完整原图，点击导出即可保存离线版';
+}
+async function fetchPinned(){
+  if(originalHtml)return;
+  loadTitle.textContent='正在恢复作业一完整原版';
+  loadHint.textContent='读取固定的 GitHub 历史版本，保留全部内嵌原图和原始排版。';
+  loadFallback.hidden=true;
+  try{
+    const response=await fetch(ORIGINAL_PINNED_URL,{mode:'cors',cache:'force-cache'});
+    if(!response.ok)throw Error('HTTP '+response.status);
+    const html=await response.text();
+    useOriginal(html,'remote');
+  }catch(err){
+    loadTitle.textContent='需要载入你的原版 index.html';
+    loadHint.textContent='当前浏览器无法连接到原始 GitHub 文件。请联网重试，或选择你电脑上下载的原始 index.html；页面不会丢弃任何图片。';
+    loadFallback.hidden=false;
+    loadStatus.textContent='未加载成功；先不要用此版本覆盖原有文件。';
+    exportStatus.textContent='请先加载作业一原版才能完整导出';
+  }
+}
+document.getElementById('retryFetch').addEventListener('click',fetchPinned);
+document.getElementById('chooseOriginal').addEventListener('click',()=>document.getElementById('originalFileInput').click());
+document.getElementById('originalFileInput').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];
+  if(!file)return;
+  try{useOriginal(await file.text(),'local');}
+  catch(err){loadTitle.textContent='未能识别原始文件';loadHint.textContent=String(err.message);loadFallback.hidden=false}
+});
+exportButton.addEventListener('click',()=>{
+  if(!originalHtml)return;
+  try{
+    const encoded=utf8ToB64(originalHtml);
+    const clone=document.documentElement.cloneNode(true);
+    const payload=clone.querySelector('#embeddedOriginal');
+    payload.textContent=encoded;
+    // Do not duplicate the large original HTML in iframe.srcdoc or the hero image src:
+    clone.querySelector('#originalFrame').removeAttribute('srcdoc');
+    clone.querySelector('#conceptImage').removeAttribute('src');
+    clone.querySelector('#conceptImage').setAttribute('hidden','');
+    const finalMarkup='<!DOCTYPE html>\n'+clone.outerHTML;
+    const blob=new Blob([finalMarkup],{type:'text/html;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='index.html';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),30000);
+    exportStatus.textContent=`离线完整版本已生成（约 ${(blob.size/1024/1024).toFixed(2)} MB），可覆盖仓库根目录 index.html`;
+  }catch(err){exportStatus.textContent='导出失败：'+err.message}
+});
+(function boot(){
+  showWork(location.hash==='#homework02'?'two':'one',false);
+  showTopic('brs');filterReq();
+  const stored=document.getElementById('embeddedOriginal').textContent.trim();
+  if(stored){
+    try{useOriginal(b64ToUtf8(stored),'embedded');return}
+    catch(err){loadTitle.textContent='内嵌原版加载异常';loadHint.textContent='请从本地重新选择原来的 index.html 文件。';loadFallback.hidden=false;return}
+  }
+  fetchPinned();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"7939e04a4baf43c8b86a560f74aac60e","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
